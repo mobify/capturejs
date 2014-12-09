@@ -7,6 +7,6 @@
     },
     "ignore": [
         "tests",
-        "circle.yml",
+        "circle.yml"
     ]
 }
