@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         express: {
-            custom: {
+            capturejs: {
                 options: {
                     hostname: '0.0.0.0',
                     port: 3000,
@@ -28,11 +28,16 @@ module.exports = function(grunt) {
             },
         },
         uglify: {
-            full: {
+            capturejs: {
                 files: {
                     'build/capture.min.js': ['build/capture.js']
                 }
             },
+        },
+        watch: {
+            files: ["src/**/*.js"
+            ],
+            tasks: ['build'],
         },
         'saucelabs-qunit': {
             capturejs: {
@@ -145,8 +150,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-saucelabs');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('build', ['browserify', 'uglify']);
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
     grunt.registerTask('test', ['express', 'qunit']);
+    grunt.registerTask('serve', ['build', 'express', 'watch']);
 };

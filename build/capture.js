@@ -406,9 +406,6 @@ function extractHTMLStringFromElement(container) {
         if (tagName == 'script' && ((/mobify/.test(el.src) || /mobify/i.test(el.textContent)))) {
             return '';
         }
-        if (el.getAttribute && /capture-scripts/.test(el.getAttribute('class'))) {
-            return '';
-        }
         return el.outerHTML || el.nodeValue || Utils.outerHTML(el);
     }).join('');
 }
@@ -419,7 +416,7 @@ var cachedDiv = document.createElement('div');
 // ##
 // # Constructor
 // ##
-var Capture = window.Capture = function(sourceDoc, prefix) {
+var Capture = function(sourceDoc, prefix) {
     this.sourceDoc = sourceDoc;
     this.prefix = prefix || "x-";
     if (window.Mobify) window.Mobify.prefix = this.prefix;
@@ -941,7 +938,6 @@ Capture.patchAnchorLinks = patchAnchorLinks;
 return Capture;
 
 }));
-
 },{"../bower_components/mobifyjs-utils/utils.js":1,"./patchAnchorLinks.js":3}],3:[function(require,module,exports){
 // Fixes anchor links (on FF)
 (function (root, factory) {

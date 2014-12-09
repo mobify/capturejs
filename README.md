@@ -1,22 +1,34 @@
-# Image Resize Client
+# capture.js
 
-This repo contains the client library for Mobify's Image Resizing service.
+A library for capturing your DOM. 
 
-## Installation
+## How to install
 
-First, you will need to install grunt-cli and bower globally:
+    $ npm install
+    $ bower install
 
-    npm install -g grunt-cli bower
+Check if everything works by running the tests:
 
-Then install the local dependencies:
+    $ grunt test
 
-    npm install
-    bower install
+## How to create and ship a change
 
-## Testing
+Run the following command to watch and build the capture.js file
+as you develop:
 
-    grunt test
+	$ grunt serve
 
-And if you have Saucelabs credentials:
+Then, do the following to ship the change:
 
-    grunt saucelabs
+* Make your code changes and create a pull-request
+* Ensure the tests still work (`grunt test`)
+* Get your change reviewed and :+1:'ed
+
+## Roadmap
+
+- Add instructions on how to use capture.js stand-alone (currently
+  capture.js is something that is integrated into mobify.js)
+
+## Where to get help
+
+Talk to @jansepar
