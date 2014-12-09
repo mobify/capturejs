@@ -1,0 +1,12 @@
+*.swp
+.DS_STORE
+_site
+node_modules/
+bower_components/
+*.bak
+*.zip
+*.gz
+build/mobify-experimental*
+report.xml
+localConfig.json
+sauce_connect.log*
