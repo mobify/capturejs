@@ -1,2 +1,6 @@
+1.0.1
+    - Changes necessary for adaptive.js
+    - Remove adaptive.js and loader.js from capture
+    - Set Capture to the window
 1.0.0
     - Initial commit with capturing moved into separate repo
