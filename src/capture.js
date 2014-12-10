@@ -91,7 +91,12 @@ function extractHTMLStringFromElement(container) {
         if (tagName == '#comment') return '<!--' + el.textContent + '-->';
         if (tagName == 'plaintext') return el.textContent;
         // Don't allow mobify related scripts to be added to the new document
-        if (tagName == 'script' && ((/mobify/.test(el.src) || /mobify/i.test(el.textContent)))) {
+        if (tagName == 'script' && ((/mobify|adaptive|loader/.test(el.src) || /mobify|adaptive|loader/i.test(el.textContent)))) {
+            return '';
+        }
+        // If the script has the class "capture-remove", don't let it
+        // get added to the captured document
+        if (el.getAttribute && /capture-remove/.test(el.getAttribute('class'))) {
             return '';
         }
         return el.outerHTML || el.nodeValue || Utils.outerHTML(el);
@@ -104,7 +109,7 @@ var cachedDiv = document.createElement('div');
 // ##
 // # Constructor
 // ##
-var Capture = function(sourceDoc, prefix) {
+var Capture = window.Capture = function(sourceDoc, prefix) {
     this.sourceDoc = sourceDoc;
     this.prefix = prefix || "x-";
     if (window.Mobify) window.Mobify.prefix = this.prefix;
