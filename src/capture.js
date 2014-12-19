@@ -270,6 +270,16 @@ Capture.setElementContentFromString = function(el, htmlString) {
     var bodyEl = doc.getElementsByTagName('body')[0] || doc.createElement('body');
     var htmlEl = doc.getElementsByTagName('html')[0];
 
+    if (Capture.isIOS8_0()) {
+        // ADJS-92: On iOS 8.x devices smart banners need to be removed 
+        // otherwise we get duplicate banners
+        var smartBanner = headEl.querySelectorAll('meta[name="apple-itunes-app"]')[0];
+
+        if (smartBanner) {
+            smartBanner.parentNode.removeChild(smartBanner);
+        }
+    }
+
     var captured = {
         doctype: Utils.getDoctype(doc),
         htmlOpenTag: Capture.openTag(htmlEl),
