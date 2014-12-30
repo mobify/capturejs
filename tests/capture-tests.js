@@ -297,9 +297,9 @@ require(["mobifyjs/utils", "mobifyjs/capture"], function(Utils, Capture) {
      * Ensure that the mobify library is re-inserted into the
      * document, as well that the main function is inserted.
      */
-    asyncTest("mobify scripts are re-inserted", function() {
+    asyncTest("integration - scripts are re-inserted", function() {
         var opts = {
-            src: "/tests/fixtures/mobify-library-example.html"
+            src: "/tests/fixtures/integration-example.html"
         };
         var $iframe = $("<iframe>", opts);
         var el = $iframe[0];
@@ -318,13 +318,13 @@ require(["mobifyjs/utils", "mobifyjs/capture"], function(Utils, Capture) {
     /* 
      * Most browsers create a new global javascript namespace in the new document, 
      * except webkit, which preserves the namespace as it was before the call to 
-     * document.open(). We reinject the library to ensure Mobify can be used
+     * document.open(). We reinject the library to ensure `Capture` can be used
      * after the namespace is cleared.
      */
-    asyncTest("mobify survives flood", function() {
+    asyncTest("integration - capture survives flood", function() {
         var opts = {
             id: "flood-test",
-            src: "/tests/fixtures/mobify-library-example.html"
+            src: "/tests/fixtures/integration-example.html"
         };
         var $iframe = $("<iframe>", opts);
         var el = $iframe[0];
@@ -332,7 +332,7 @@ require(["mobifyjs/utils", "mobifyjs/capture"], function(Utils, Capture) {
         window.addEventListener("message", function onMessage(event) {
             if (event.source != el.contentWindow) return;
             window.removeEventListener("message", onMessage, false);
-            ok(el.contentWindow.Mobify);
+            ok(el.contentWindow.Capture);
             start();
         }, false);
 
