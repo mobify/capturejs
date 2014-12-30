@@ -313,7 +313,7 @@ return Utils;
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['mobifyjs/utils', 'mobifyjs/patchAnchorLinks'], factory);
+        define(['mobifyjs/utils', 'patchAnchorLinks'], factory);
     } else if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,

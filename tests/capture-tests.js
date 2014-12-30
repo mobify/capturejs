@@ -1,4 +1,4 @@
-require(["mobifyjs/utils", "mobifyjs/capture"], function(Utils, Capture) {
+require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     QUnit.start();
 
     module('Capturing');

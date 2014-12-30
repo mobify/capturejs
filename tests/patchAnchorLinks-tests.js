@@ -1,4 +1,4 @@
-require(['mobifyjs/patchAnchorLinks'], function(patchAnchorLinks) {
+require(['patchAnchorLinks'], function(patchAnchorLinks) {
     module("Anchor");
     var skip = function() {
         // Test harness does not work on Android 4.0.x and less because
