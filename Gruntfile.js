@@ -127,19 +127,7 @@ module.exports = function(grunt) {
                             platform: 'Linux',
                             version: '4'
                         }
-                    ], // https://saucelabs.com/docs/browsers
-                    onTestComplete: function(){
-                        // Called after a qunit unit is done, per page, per browser
-                        // Return true or false, passes or fails the test
-                        // Returning undefined does not alter the test result
-
-                        // For async return, call
-                        var done = this.async();
-                        setTimeout(function(){
-                            // Return to this test after 1000 milliseconds
-                            done(/*true or false changes the test result, undefined does not alter the result*/);
-                        }, 1000);
-                    }
+                    ] // https://saucelabs.com/docs/browsers
                 }
             }
         }
