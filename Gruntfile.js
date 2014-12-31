@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
 
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         express: {
             capturejs: {
                 options: {
@@ -130,6 +131,37 @@ module.exports = function(grunt) {
                     ] // https://saucelabs.com/docs/browsers
                 }
             }
+        },
+        s3: {
+            options: {
+                access: "public-read",
+                headers: { "Cache-Control": "public,max-age=1800" }, // cache for 30 min
+                maxOperations: 6
+            },
+            capturejs: {
+                options: {
+                    bucket: 'mobify',
+                    gzip: true
+                },
+                upload: [
+                    { // unminified dev build
+                        src: "build/capture.js",
+                        dest: "capturejs/capture-<%= pkg.version %>.js",
+                    },
+                    { // unminified dev build to latest
+                        src: "build/capture.js",
+                        dest: "capturejs/capture-latest.js",
+                    },
+                    { // minified production build
+                        src: "build/capture.min.js",
+                        dest: "capturejs/capture-<%= pkg.version %>.min.js",
+                    },
+                    { // minified production build to latest
+                        src: "build/capture.min.js",
+                        dest: "capturejs/capture-latest.min.js",
+                    }
+                ]
+            }
         }
     });
 
@@ -139,9 +171,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-s3');
 
     grunt.registerTask('build', ['browserify', 'uglify']);
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
     grunt.registerTask('test', ['express', 'qunit']);
     grunt.registerTask('serve', ['build', 'express', 'watch']);
+    grunt.registerTask('deploy', ['s3']);
 };
