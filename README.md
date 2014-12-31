@@ -2,18 +2,20 @@
 
 A library for capturing your DOM. 
 
-## How to install
+## How to use
+
+Right now, there are no instructions on how to use capture.js
+standalone. Please go to www.mobifyjs.com for information
+on how to use capturing.
+
+## How to create and ship a change
+
+First, install the dependancies:
 
     $ npm install
     $ bower install
 
-Check if everything works by running the tests:
-
-    $ grunt test
-
-## How to create and ship a change
-
-Run the following command to watch and build the capture.js file
+Then, run the following command to watch and build the capture.js file
 as you develop:
 
 	$ grunt serve
