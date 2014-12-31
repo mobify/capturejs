@@ -10,3 +10,4 @@ build/mobify-experimental*
 report.xml
 localConfig.json
 sauce_connect.log*
+build
