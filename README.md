@@ -21,7 +21,7 @@ as you develop:
 Then, do the following to ship the change:
 
 * Make your code changes and create a pull-request
-* Ensure the tests still work (`grunt test`)
+* Ensure the tests still work (`grunt test` and `grunt saucelabs`)
 * Get your change reviewed and :+1:'ed
 
 ## Roadmap
