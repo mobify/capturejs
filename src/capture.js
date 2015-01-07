@@ -1,12 +1,12 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['mobifyjs/utils', 'mobifyjs/patchAnchorLinks'], factory);
+        define(['mobifyjs/utils', 'patchAnchorLinks'], factory);
     } else if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
-        module.exports = factory(require('../bower_components/mobifyjs-utils/utils.js'), require('./patchAnchorLinks.js'));
+        module.exports = factory(require('../../mobifyjs-utils/utils.js'), require('./patchAnchorLinks.js'));
     } else {
         // Browser globals (root is window)
         root.Capture = factory(root.Utils, root.patchAnchorLinks);

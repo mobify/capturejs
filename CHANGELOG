@@ -3,4 +3,4 @@
     - Remove adaptive.js and loader.js from capture
     - Set Capture to the window
 1.0.0
-    - Initial commit with capturing moved into separate repo
+    - Initial commit moving capture.js out of the mobifyjs repo
