@@ -1,4 +1,4 @@
-require(['mobifyjs/patchAnchorLinks'], function(patchAnchorLinks) {
+require(['patchAnchorLinks'], function(patchAnchorLinks) {
     module("Anchor");
     var skip = function() {
         // Test harness does not work on Android 4.0.x and less because
@@ -157,5 +157,5 @@ require(['mobifyjs/patchAnchorLinks'], function(patchAnchorLinks) {
         ok(patchAnchorLinks._isOldFirefox(firefoxUAs["3.6.9"]), "firefox 3.6.9 is old");
         ok(patchAnchorLinks._isOldFirefox(firefoxUAs["25.0"]), "firefox 25 is also old");
         ok(!patchAnchorLinks._isOldFirefox(firefoxUAs["29.0"]), "firefox 29 is not old!");
-    })
+    });
 });

@@ -1,12 +1,12 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['mobifyjs/utils', 'mobifyjs/patchAnchorLinks'], factory);
+        define(['mobifyjs/utils', 'patchAnchorLinks'], factory);
     } else if (typeof exports === 'object') {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
-        module.exports = factory(require('../bower_components/mobifyjs-utils/utils.js'), require('./patchAnchorLinks.js'));
+        module.exports = factory(require('../../mobifyjs-utils/utils.js'), require('./patchAnchorLinks.js'));
     } else {
         // Browser globals (root is window)
         root.Capture = factory(root.Utils, root.patchAnchorLinks);
@@ -91,7 +91,12 @@ function extractHTMLStringFromElement(container) {
         if (tagName == '#comment') return '<!--' + el.textContent + '-->';
         if (tagName == 'plaintext') return el.textContent;
         // Don't allow mobify related scripts to be added to the new document
-        if (tagName == 'script' && ((/mobify/.test(el.src) || /mobify/i.test(el.textContent)))) {
+        if (tagName == 'script' && ((/mobify|adaptive|loader/.test(el.src) || /mobify|adaptive|loader/i.test(el.textContent)))) {
+            return '';
+        }
+        // If the script has the class "capture-remove", don't let it
+        // get added to the captured document
+        if (el.getAttribute && /capture-remove/.test(el.getAttribute('class'))) {
             return '';
         }
         return el.outerHTML || el.nodeValue || Utils.outerHTML(el);
@@ -104,7 +109,7 @@ var cachedDiv = document.createElement('div');
 // ##
 // # Constructor
 // ##
-var Capture = function(sourceDoc, prefix) {
+var Capture = window.Capture = function(sourceDoc, prefix) {
     this.sourceDoc = sourceDoc;
     this.prefix = prefix || "x-";
     if (window.Mobify) window.Mobify.prefix = this.prefix;
