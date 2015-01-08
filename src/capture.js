@@ -270,9 +270,9 @@ Capture.setElementContentFromString = function(el, htmlString) {
     var bodyEl = doc.getElementsByTagName('body')[0] || doc.createElement('body');
     var htmlEl = doc.getElementsByTagName('html')[0];
 
-    if (Capture.isIOS8_0()) {
-        // ADJS-92: On iOS 8.x devices smart banners need to be removed 
-        // otherwise we get duplicate banners
+     if (Capture.isIOS8_0()) {
+        // ADJS-92: In iOS8 if the smart banner is above the tag, and we output it in the captured doc we'll get two smart banners.
+        // So remove any smart banners in the headEl (the contents of the head above the tag)
         var smartBanner = headEl.querySelectorAll('meta[name="apple-itunes-app"]')[0];
 
         if (smartBanner) {
