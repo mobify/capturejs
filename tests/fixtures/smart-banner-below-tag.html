@@ -7,17 +7,20 @@
 // path to capture.js
 "/build/capture.js",
 
-// calls to APIs go here (or path to a main.js)
 function() {
     var capturing = window.Mobify && window.Mobify.capturing || false;
 
     if (capturing) {
-        console.log("Executing main during capturing phase!")
+        Capture.isIOS8_0 = function() {
+            return true;
+        };
 
-        // Grab reference to a newly created document
         Capture.init(function(capture){
             capture.renderCapturedDoc();
         });
+    } else {
+        // Tell parent we are ready
+        parent.postMessage("finished", "*");
     }
 });</script>
 <!-- END MOBIFY TAG -->
@@ -25,6 +28,5 @@ function() {
 </head>
 
 <body>
-    <p>This is a Smart Banners test.</p>
 </body>
 </html>

@@ -429,4 +429,46 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append(iframe);
     });
 
+    /**
+    * Test for ADJS-92: iOS 8.0 smart banner issue.
+    * Ensure that smart banners above the tag are removed during capturing.
+    **/
+    asyncTest("Remove smart banner when above the tag - iOS8_0 only", function() {
+        var $iframe = $("<iframe>", {
+            id: "smart-banner-above-tag",
+            src: "/tests/fixtures/smart-banner-above-tag.html"
+        });
+        var el = $iframe[0];
+
+        window.addEventListener("message", function onMessage(e) {
+            if (event.source != el.contentWindow) return;
+            window.removeEventListener("message", onMessage, false);
+            equal(el.contentDocument.querySelectorAll("meta[name='apple-itunes-app']").length, 0, "Smart banner meta tag has been removed.");
+            start();
+        }, false);
+
+        $("#qunit-fixture").append($iframe);
+    });
+
+    /**
+    * Test for ADJS-92: iOS 8.0 smart banner issue.
+    * Ensure that smart banners below the tag are not removed on IOS8
+    **/
+    asyncTest("Leave smart banner in place when below the tag - iOS8_0 only", function() {
+        var $iframe = $("<iframe>", {
+            id: "smart-banner-below-tag",
+            src: "/tests/fixtures/smart-banner-below-tag.html"
+        });
+        var el = $iframe[0];
+
+        window.addEventListener("message", function onMessage(e) {
+            if (event.source != el.contentWindow) return;
+            window.removeEventListener("message", onMessage, false);
+            equal(el.contentDocument.querySelectorAll("meta[name='apple-itunes-app']").length, 1, "Smart banner meta tag is still in place.");
+            start();
+        }, false);
+
+        $("#qunit-fixture").append($iframe);
+    });
+
 });
