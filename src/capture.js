@@ -307,7 +307,7 @@ Capture.setElementContentFromString = function(el, htmlString) {
     // <body> inside a comment, common with IE conditional comments.
     // (using a "new RegExp" here because in Android 2.3 when you use a global
     // match using a RegExp literal, the state is incorrectly cached).
-    var bodySnatcher = new RegExp('<!--(?:[\\s\\S]*?)-->|<script[^>]*?>(?:[\\s\\S]*?)</script>|(<\\/head\\s*>|<body[\\s\\S]*$)', 'gi');
+    var bodySnatcher = new RegExp('<!--(?:[\\s\\S]*?)-->|<script(?:[^>\'"]*|\'[^\']*?\'|"[^"]*?")*>(?:[\\s\\S]*?)</script>|(<\\/head\\s*>|<body[\\s\\S]*$)', 'gi');
 
     //Fallback for absence of </head> and <body>
     var rawHTML = captured.bodyContent = captured.headContent + captured.bodyContent;

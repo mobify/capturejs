@@ -191,7 +191,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
             var expectedCaptureClone = Utils.clone(expectedCapture);
 
-            expectedCaptureClone.headContent = "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n    <script type=\"text/javascript\">\"<body foo=\"fail\">\"</script>\n</head>\n"
+            expectedCaptureClone.headContent = "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n    <script type=\"text/javascript>\">\"<body foo=\"fail\">\"</script>\n</head>\n"
 
             var capture = Capture.createDocumentFragmentsStrings(doc);
 
