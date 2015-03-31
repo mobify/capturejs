@@ -1,13 +1,18 @@
-<!doctype html>
-<html>
-<head>
-    <script>
-        // Simulate mobify
-        document.write("<plaintext style=\"display:none\">");
-    </script>
+<!DOCTYPE html>
+<html class="testclass">
+<script>
+    // Simulate mobify
+    document.write("<plaintext style=\"display:none\">");
+</script>
+<head foo="bar">
+    
+    <link rel="stylesheet" href="/path/to/stylesheet.css">
     <script>"<body>"</script>
 </head>
-<body>
-    <h1>Will the real &lt;body&gt; please stand up?</h1>
+<body bar="baz">
+    <!-- comment with <head> -->
+    <p>Plaintext example page!</p>
+    <script src="/path/to/script.js"></script>
 </body>
 </html>
+
