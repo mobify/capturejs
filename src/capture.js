@@ -18,9 +18,9 @@
 // ##
 
 // v6 tag backwards compatibility change
-if (window.Mobify && 
+if (window.Mobify &&
     !window.Mobify.capturing &&
-    document.getElementsByTagName("plaintext").length) 
+    document.getElementsByTagName("plaintext").length)
 {
             window.Mobify.capturing = true;
 }
@@ -142,7 +142,7 @@ Capture.init = Capture.initCapture = function(callback, doc, prefix) {
     // for some IE10s.
     else {
         var created = false;
-        
+
         var create = function() {
             if (!created) {
                 created = true;
@@ -270,9 +270,10 @@ Capture.setElementContentFromString = function(el, htmlString) {
     var bodyEl = doc.getElementsByTagName('body')[0] || doc.createElement('body');
     var htmlEl = doc.getElementsByTagName('html')[0];
 
+    // ADJS-92: In iOS8 if the smart banner is above the tag, and we output it
+    // in the captured doc we'll get two smart banners. So remove any smart
+    // banners in the headEl (the contents of the head above the tag)
      if (Capture.isIOS8_0()) {
-        // ADJS-92: In iOS8 if the smart banner is above the tag, and we output it in the captured doc we'll get two smart banners.
-        // So remove any smart banners in the headEl (the contents of the head above the tag)
         var smartBanner = headEl.querySelectorAll('meta[name="apple-itunes-app"]')[0];
 
         if (smartBanner) {
@@ -298,59 +299,87 @@ Capture.setElementContentFromString = function(el, htmlString) {
         return this.doctype + this.htmlOpenTag + this.headOpenTag + (inject || '') + this.headContent + this.bodyOpenTag + this.bodyContent;
     };
 
-    // During capturing, we will usually end up hiding our </head>/<body ... > boundary
-    // within <plaintext> capturing element. To construct source DOM, we need to rejoin
-    // head and body content, iterate through it to find head/body boundary and expose
-    // opening <body ... > tag as a string.
+    // Normally the </head><body> boundary is captured in the <plaintext> To
+    // rebuild the source <head> and <body>, we must find the boundary.
 
-    // Consume comments without grouping to avoid catching
-    // <body> inside a comment, common with IE conditional comments.
-    // (using a "new RegExp" here because in Android 2.3 when you use a global
-    // match using a RegExp literal, the state is incorrectly cached).
+    // Consume comments and scripts without grouping to avoid hitting a <body>.
+    // This is common with IE conditional comments or scripts that
+    // `document.write` a <body> tag.
+    //
+    // Use `new RegExp(...)` because in Android 2.3 RegExp literal incorrectly
+    // cache state when using a global match.
+    //
+    // group 1 = `</head>` or `<body*`
     var bodySnatcher = new RegExp('<!--(?:[\\s\\S]*?)-->|<script(?:[^>\'"]*|\'[^\']*?\'|"[^"]*?")*>(?:[\\s\\S]*?)</script>|(<\\/head\\s*>|<body[\\s\\S]*$)', 'gi');
 
-    //Fallback for absence of </head> and <body>
+    // Fallback for absence of `</head>` and `<body*`.
     var rawHTML = captured.bodyContent = captured.headContent + captured.bodyContent;
     captured.headContent = '';
 
     // Search rawHTML for the head/body split.
     for (var match; match = bodySnatcher.exec(rawHTML); match) {
-        // <!-- comment --> . Skip it.
-        if (!match[1]) continue;
+        // <!-- comment -->, skip it!
+        if (!match[1]) {
+            continue;
+        }
 
-        // Grab the contents of head
+        // Matched `</head>` or `<body`.
+
+        // <head> content should be everything before this.
         captured.headContent = rawHTML.slice(0, match.index);
-        // Parse the head content
+
+        // Edgecase: `capture.headContent` contains `<head>` if Tag is placed
+        // before <head>.
+        //
+        // The regular situation:
+        //
+        // <html>
+        // <head></head>     <-- <plaintext> triggers </head> and <body>
+        //   <body>
+        //     <plaintext>
+        //       </head>     <-- head content and body content are inside.
+        //       <body>
+        //
+        // This situation:
+        //
+        // <html>
+        //   <body>
+        //     <plaintext>
+        //        <head></head> <-- <plaintext> triggered before, <head> is inside!
+        //        <body>
+        //
+        // group 1 = the head tag
+        // group 2 = the content of the head tag
         var parsedHeadTag = (new RegExp('^[\\s\\S]*(<head(?:[^>\'"]*|\'[^\']*?\'|"[^"]*?")*>)([\\s\\S]*)$')).exec(captured.headContent);
         if (parsedHeadTag) {
-            // if headContent contains an open head, then we know the tag was placed
-            // outside of the body
             captured.headOpenTag = parsedHeadTag[1];
             captured.headContent = parsedHeadTag[2];
         }
 
-        // If there is a closing head tag
+        // Matched `</head>`.
         if (match[1][1] == '/') {
-            // Hit </head. Gather <head> innerHTML. Also, take trailing content,
-            // just in case <body ... > is missing or malformed
+            // Take trailing content in case <body> is missing or malformed.
             captured.bodyContent = rawHTML.slice(match.index + match[1].length);
-        } else {
-            // Hit <body. Gather <body> innerHTML.
-            // If we were missing a </head> before, now we can pick up everything before <body
-            captured.bodyContent = match[0];
 
-            // Find the end of <body ... >
-            var parseBodyTag = /^((?:[^>'"]*|'[^']*?'|"[^"]*?")*>)([\s\S]*)$/.exec(captured.bodyContent);
-
-            // Will skip this if <body was malformed (e.g. no closing > )
-            if (parseBodyTag) {
-                // Normal termination. Both </head> and <body> were recognized and split out
-                captured.bodyOpenTag = parseBodyTag[1];
-                captured.bodyContent = parseBodyTag[2];
-            }
-            break;
+            // Iterate again, looking for <body>.
+            continue;
         }
+
+        // Matched `<body`.
+        captured.bodyContent = match[0];
+
+        // Find the end of the opening <body> tag.
+        // group 1 = the opening body tag
+        // group 2 = the rest of the body
+        var parseBodyTag = /^((?:[^>'"]*|'[^']*?'|"[^"]*?")*>)([\s\S]*)$/.exec(captured.bodyContent);
+        if (parseBodyTag) {
+            captured.bodyOpenTag = parseBodyTag[1];
+            captured.bodyContent = parseBodyTag[2];
+        }
+
+        break;
     }
+
     return captured;
 };
 
@@ -522,7 +551,7 @@ Capture.prototype.render = function(htmlString) {
             doc.close();
         });
     };
-    
+
     if (Capture.isIOS8_0()) {
         Capture.ios8_0ScrollFix(document, write);
     } else {
@@ -569,7 +598,7 @@ Capture.getPostload = function(doc) {
         postloadScript.id = 'postload';
         postloadScript.setAttribute("class", "mobify");
     } else {
-        // Older tags used to insert the main executable by themselves. 
+        // Older tags used to insert the main executable by themselves.
         postloadScript = doc.getElementById("main-executable");
     }
     return postloadScript;
@@ -634,7 +663,7 @@ Capture.prototype.renderCapturedDoc = function(options) {
  * Anchor Links `<a href="#foo">Link</a>` are broken on Firefox.
  * We provide a function that patches, but it does break
  * actually changing the URL to show "#foo".
- * 
+ *
  */
 Capture.patchAnchorLinks = patchAnchorLinks;
 
