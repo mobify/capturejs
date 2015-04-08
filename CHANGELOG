@@ -1,3 +1,8 @@
+1.0.3
+    - Fix issues with having <body> in a script tag above the real
+      body tag.
+1.0.2
+    - iOS8 smart banner fix
 1.0.1
     - Changes necessary for adaptive.js
     - Remove adaptive.js and loader.js from capture
