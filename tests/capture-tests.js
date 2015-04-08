@@ -90,9 +90,9 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     }
 
     var captureCompare = function(actual, expected) {
-        ok(compareHTMLStrings(actual.headContent, expected.headContent), "head content matches");            
+        ok(compareHTMLStrings(actual.headContent, expected.headContent), "head content matches");
         ok(compareHTMLStrings(actual.bodyContent, expected.bodyContent), "body content matches");
-        
+
         var actualToCompare = $.extend({}, actual);
         delete actualToCompare.headContent;
         delete actualToCompare.bodyContent;
@@ -176,6 +176,33 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             captureCompare(capture, expectedCaptureClone)
             start();
         });
+        $("#qunit-fixture").append(iframe);
+    });
+
+    asyncTest("createDocumentFragmentsStrings - script with opening body", function() {
+        var iframe = $("<iframe>", {id: "plaintext-example5"});
+        iframe.attr("src", "/tests/fixtures/plaintext-script-with-opening-body.html")
+        iframe.one('load', function(){
+            var doc = this.contentDocument;
+
+            // @jb: I don't get this?
+            // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
+            var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
+
+            var expectedCaptureClone = Utils.clone(expectedCapture);
+
+            expectedCaptureClone.headContent = "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n    <script type=\"text/javascript>\">\"<body foo=\"fail\">\"</script>\n</head>\n"
+
+            var capture = Capture.createDocumentFragmentsStrings(doc);
+
+            // @jb: Cheat
+            // We're not testing the all function here, let's remove it
+            delete capture.all;
+            captureCompare(capture, expectedCaptureClone)
+
+            start();
+        });
+
         $("#qunit-fixture").append(iframe);
     });
 
@@ -293,7 +320,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append($iframe);
     });
 
-    /* 
+    /*
      * Ensure that the mobify library is re-inserted into the
      * document, as well that the main function is inserted.
      */
@@ -315,9 +342,9 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append($iframe);
     });
 
-    /* 
-     * Most browsers create a new global javascript namespace in the new document, 
-     * except webkit, which preserves the namespace as it was before the call to 
+    /*
+     * Most browsers create a new global javascript namespace in the new document,
+     * except webkit, which preserves the namespace as it was before the call to
      * document.open(). We reinject the library to ensure `Capture` can be used
      * after the namespace is cleared.
      */
@@ -364,7 +391,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
     asyncTest("Capture.restore", function(){
         var $iframe = $("<iframe>", {id: "plaintext-example201", src: "/tests/fixtures/plaintext-restore-example.html"});
-        var el = $iframe[0];  
+        var el = $iframe[0];
 
         var expectedHTML =
             '<!DOCTYPE HTML>' +
@@ -383,7 +410,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             if (event.source != el.contentWindow) return;
             window.removeEventListener("message", onMessage, false);
             var doc = el.contentDocument;
-            
+
             // Make sure that there are no meta tags in the document at all
             var html = Utils.getDoctype(doc) + Utils.outerHTML(doc.documentElement);
 
