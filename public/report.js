@@ -9,7 +9,7 @@ window.report = function(counts) {
                 preparserMakesRequests = true;
             }
 
-            if (/^cache/.test(key) && counts[key] > 1) {
+            if (/cache/.test(key) && counts[key] > 1) {
                 duplicatesRequestsForCachedResponses = true;
             }
         }
