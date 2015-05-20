@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <title>Capturing Network Test</title>
+    <script>
+        window.prefix = <%= prefix %>;
+
+        (function(doc) {
+            var firstScript = doc.getElementsByTagName('script')[0];
+
+            var capture = doc.createElement('script');
+            capture.src = "capture.js";
+            firstScript.parentNode.insertBefore(capture, firstScript);
+
+            doc.write('<plaintext style="display: none;">');
+        })(document);
+    </script>
+
+    <link rel="stylesheet" href="/<%= prefix %>/style.css">
+    <link rel="stylesheet" href="/cache/<%= prefix %>/style.cache.css">
+    <link rel="stylesheet" href="/slow/<%= prefix %>/style.slow.css">
+</head>
+<body>
+    <p>Does block requests for resources? <a href="/">Reload</a></p>
+    <ul>
+        <li id="preparser-requests">Pre-parser makes requests? </li>
+        <li id="duplicates-requests">Duplicate requests for cached resources? </li>
+        <li id="terminates-requests">Requests terminated? </li>
+    </ul>
+
+    <img src="/<%= prefix %>/image.jpg">
+    <img src="/cache/<%= prefix %>/image.cache.jpg">
+    <img src="/slow/<%= prefix %>/image.slow.jpg">
+
+    <script src="/<%= prefix %>/script.js"></script>
+    <script src="/cache/<%= prefix %>/script.cache.js"></script>
+    <script src="/slow/<%= prefix %>/script.slow.js"></script>
+</body>
+</html>
