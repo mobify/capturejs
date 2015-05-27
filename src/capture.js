@@ -528,6 +528,29 @@ Capture.prototype.enabledHTMLString = Capture.prototype.escapedHTMLString = func
 };
 
 /**
+ * Inject the Preview Toolbar javascript file into the DOM.
+ *
+ * A script element will be added to the document that is passed in. It will be
+ * added after the very last child of 'body.
+ *
+ * If the 'mobify-toolbar' parameter is set to 'false', this will not modify
+ * the DOM at all and the toolbar will not show up. The toolbar is displayed
+ * by default if not set to hidden.
+ */
+Capture.injectPreviewHook = function(doc) {
+    if (window.Mobify.Preview) {
+        var showToolbar = window.Mobify.Preview.getParameter('toolbar') === 'true';
+        if (showToolbar) {
+            var hookScript = doc.createElement('script'),
+                body = doc.head || doc.getElementsByTagName('body')[0];
+
+            hookScript.src = '//preview.mobify.com/static/preview/js/preview-toolbar.js';
+            body.appendChild(hookScript);
+        }
+    }
+};
+
+/**
  * Rewrite the document with a new html string
  */
 Capture.prototype.render = function(htmlString) {
@@ -548,6 +571,7 @@ Capture.prototype.render = function(htmlString) {
         setTimeout(function(){
             doc.open("text/html", "replace");
             doc.write(enabledHTMLString);
+            Capture.injectPreviewHook(doc);
             doc.close();
         });
     };
