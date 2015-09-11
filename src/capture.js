@@ -273,7 +273,7 @@ Capture.setElementContentFromString = function(el, htmlString) {
     // ADJS-92: In iOS8 if the smart banner is above the tag, and we output it
     // in the captured doc we'll get two smart banners. So remove any smart
     // banners in the headEl (the contents of the head above the tag)
-     if (Capture.isIOS8OrGreater()) {
+     if (Capture.isIOS8_0()) {
         var smartBanner = headEl.querySelectorAll('meta[name="apple-itunes-app"]')[0];
 
         if (smartBanner) {
@@ -381,6 +381,12 @@ Capture.setElementContentFromString = function(el, htmlString) {
     }
 
     return captured;
+};
+
+Capture.isIOS8_0 = function() {
+    var IOS8_REGEX = /ip(hone|od|ad).*Version\/8.0/i;
+
+    return IOS8_REGEX.test(window.navigator.userAgent);
 };
 
 var IOS_REGEX = /ip(?:hone|od|ad).*Version\/(\d){1,2}\.\d/i;
