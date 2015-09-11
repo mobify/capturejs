@@ -273,7 +273,7 @@ Capture.setElementContentFromString = function(el, htmlString) {
     // ADJS-92: In iOS8 if the smart banner is above the tag, and we output it
     // in the captured doc we'll get two smart banners. So remove any smart
     // banners in the headEl (the contents of the head above the tag)
-     if (Capture.isIOS8_0()) {
+     if (Capture.isIOS8OrGreater()) {
         var smartBanner = headEl.querySelectorAll('meta[name="apple-itunes-app"]')[0];
 
         if (smartBanner) {
@@ -383,10 +383,11 @@ Capture.setElementContentFromString = function(el, htmlString) {
     return captured;
 };
 
-Capture.isIOS8_0 = function() {
-    var IOS8_REGEX = /ip(hone|od|ad).*Version\/8.0/i;
+var IOS_REGEX = /ip(?:hone|od|ad).*Version\/(\d){1,2}\.\d/i;
+Capture.isIOS8OrGreater = function() {
+    var match = window.navigator.userAgent.match(IOS_REGEX);
 
-    return IOS8_REGEX.test(window.navigator.userAgent);
+    return match ? match[1] >= 8 : false;
 };
 
 /**
@@ -411,7 +412,7 @@ Capture.isSetBodyInnerHTMLBroken = function(){
 };
 
 /**
- * iOS 8.0 has a bug where dynamically switching the viewport (by swapping the
+ * iOS 8.0+ has a bug where dynamically switching the viewport (by swapping the
  * viewport meta tag) causes the viewport to automatically scroll. When
  * capturing, the initial document never has an active meta viewport tag.
  * Then, the rendered document injects one causing the aforementioned scroll.
@@ -424,7 +425,7 @@ Capture.isSetBodyInnerHTMLBroken = function(){
  * Open Radar: http://www.openradar.me/radar?id=5516452639539200
  * WebKit Bugzilla: https://bugs.webkit.org/show_bug.cgi?id=136904
  */
-Capture.ios8_0ScrollFix = function(doc, callback) {
+Capture.ios8AndGreaterScrollFix = function(doc, callback) {
     // Using `getElementsByTagName` here because grabbing head using
     // `document.head` will throw exceptions in some older browsers (iOS 4.3).
     var head = doc.getElementsByTagName('head');
@@ -552,8 +553,8 @@ Capture.prototype.render = function(htmlString) {
         });
     };
 
-    if (Capture.isIOS8_0()) {
-        Capture.ios8_0ScrollFix(document, write);
+    if (Capture.isIOS8OrGreater()) {
+        Capture.ios8AndGreaterScrollFix(document, write);
     } else {
         write();
     }
