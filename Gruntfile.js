@@ -96,26 +96,31 @@ module.exports = function(grunt) {
                             browserName: 'firefox',
                             version: '18.0'
                         },
-                        { // Highest FF on OSX
-                            browserName: 'firefox',
-                            platform: 'Mac 10.6',
-                            version: '14.0'
-                        },
-                        { // Lowest iPad on OSX (simulator)
+                        {
                             browserName: 'ipad',
-                            platform: 'Mac 10.6',
-                            version: '4.3'
+                            platform: 'OS X 10.10',
+                            version: '9.0'
                         },
-                        { // Highest iPad on OSX (simulator)
+                        {
+                            browserName: 'ipad',
+                            platform: 'OS X 10.10',
+                            version: '8.4'
+                        },
+                        {
+                            browserName: 'iphone',
+                            platform: 'OS X 10.10',
+                            version: '9.0'
+                        },
+                        {
+                            browserName: 'iphone',
+                            platform: 'OS X 10.10',
+                            version: '8.4'
+                        },
+                        {
                           // NOTE: iOS 6 is available, but it hangs on SauceLabs...
                             browserName: 'ipad',
                             platform: 'Mac 10.6',
                             version: '5'
-                        },
-                        { // Lowest iPhone on OSX (simulator)
-                            browserName: 'iphone',
-                            platform: 'Mac 10.6',
-                            version: '4.3'
                         },
                         { // Highest iPhone on OSX (simulator)
                           // NOTE: iOS 6 is available, but it hangs on SauceLabs...
