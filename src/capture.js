@@ -389,7 +389,7 @@ Capture.isIOS8_0 = function() {
     return IOS8_REGEX.test(window.navigator.userAgent);
 };
 
-var IOS_REGEX = /ip(?:hone|od|ad).*Version\/(\d){1,2}\.\d/i;
+var IOS_REGEX = /ip(?:hone|od|ad).*Version\/(\d{1,2})\.\d/i;
 Capture.isIOS8OrGreater = function(ua) {
     if (typeof ua !== 'string') {
         return;
