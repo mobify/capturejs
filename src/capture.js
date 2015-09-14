@@ -390,8 +390,12 @@ Capture.isIOS8_0 = function() {
 };
 
 var IOS_REGEX = /ip(?:hone|od|ad).*Version\/(\d){1,2}\.\d/i;
-Capture.isIOS8OrGreater = function() {
-    var match = window.navigator.userAgent.match(IOS_REGEX);
+Capture.isIOS8OrGreater = function(ua) {
+    if (typeof ua !== 'string') {
+        return;
+    }
+
+    var match = ua.match(IOS_REGEX);
 
     return match ? match[1] >= 8 : false;
 };
@@ -559,7 +563,7 @@ Capture.prototype.render = function(htmlString) {
         });
     };
 
-    if (Capture.isIOS8OrGreater()) {
+    if (Capture.isIOS8OrGreater(window.navigator.userAgent)) {
         Capture.ios8AndGreaterScrollFix(document, write);
     } else {
         write();
