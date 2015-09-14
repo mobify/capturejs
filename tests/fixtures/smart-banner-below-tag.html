@@ -18,13 +18,18 @@ function() {
         Capture.init(function(capture){
             capture.renderCapturedDoc();
         });
-    } else {
-        // Tell parent we are ready
-        parent.postMessage("finished", "*");
     }
 });</script>
 <!-- END MOBIFY TAG -->
     <meta name="apple-itunes-app" content="app-id=284882215">
+    <script>
+        var capturing = window.Mobify && window.Mobify.capturing || false;
+
+        if (!capturing) {
+            // Tell parent we are ready
+            parent.postMessage("finished", "*");
+        }
+    </script>
 </head>
 
 <body>

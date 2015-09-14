@@ -248,7 +248,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         var head = document.createElement('head');
         html.appendChild(head);
 
-        Capture.ios8_0ScrollFix(html, function() {
+        Capture.ios8AndGreaterScrollFix(html, function() {
             var meta = html.getElementsByTagName('meta')[0]
 
             ok(true,
@@ -496,6 +496,37 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         }, false);
 
         $("#qunit-fixture").append($iframe);
+    });
+
+    test("isIOS8OrGreater returns true for iOS agents running iOS 8 or greater only", function() {
+        // iOS
+        var iOS7 = 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53';
+        var iOS8 = 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4';
+        var iOS9 = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_0 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13A340 Safari/601.1';
+        var fauxIOS9_1 = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.1 Mobile/13A340 Safari/601.1';
+        var fauxIOS10 = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_0 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/10.0 Mobile/13A340 Safari/601.1';
+
+        // Android
+        var nexus4 = 'Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.122 Mobile Safari/537.36';
+        var galaxyS6 = 'Mozilla/5.0 (Linux; Android 5.0.2; SAMSUNG SM-G925F Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/3.0 Chrome/38.0.2125.102 Mobile Safari/537.36';
+
+        // Windows Phone
+        var lumia520 = 'Mozilla/5.0 (compatible; MSIE 10.0; Windows Phone 8.0; Trident/6.0; IEMobile/10.0; ARM; Touch; NOKIA; Lumia 520)';
+        var windowsPhone10 = 'Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; DEVICE INFO) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Mobile Safari/537.36 Edge/12';
+
+        ok(!Capture.isIOS8OrGreater(iOS7), 'iOS 7.0');
+        ok(Capture.isIOS8OrGreater(iOS8), 'iOS 8.0');
+        ok(Capture.isIOS8OrGreater(iOS9), 'iOS 9.0');
+        ok(Capture.isIOS8OrGreater(fauxIOS9_1), 'iOS 9.1');
+        ok(Capture.isIOS8OrGreater(fauxIOS10), 'iOS 10.0');
+
+        ok(!Capture.isIOS8OrGreater(nexus4), 'Nexus 4 - Android 4.4');
+        ok(!Capture.isIOS8OrGreater(galaxyS6), 'Galaxy S6 - Android 5.0.2');
+
+        ok(!Capture.isIOS8OrGreater(windowsPhone10), 'Lumia 520 - Windows Phone 8');
+        ok(!Capture.isIOS8OrGreater(windowsPhone10), 'Windows Phone 10');
+
+        ok(!Capture.isIOS8OrGreater('lorem ipsum mobile browser 9.0'), 'Nonsense');
     });
 
 });

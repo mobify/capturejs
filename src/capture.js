@@ -389,6 +389,17 @@ Capture.isIOS8_0 = function() {
     return IOS8_REGEX.test(window.navigator.userAgent);
 };
 
+var IOS_REGEX = /ip(?:hone|od|ad).*Version\/(\d{1,2})\.\d/i;
+Capture.isIOS8OrGreater = function(ua) {
+    if (typeof ua !== 'string') {
+        return;
+    }
+
+    var match = ua.match(IOS_REGEX);
+
+    return match ? match[1] >= 8 : false;
+};
+
 /**
  * This is a feature detection function to determine if you
  * can construct body using innerHTML. In iOS8, setting
@@ -411,7 +422,7 @@ Capture.isSetBodyInnerHTMLBroken = function(){
 };
 
 /**
- * iOS 8.0 has a bug where dynamically switching the viewport (by swapping the
+ * iOS 8.0+ has a bug where dynamically switching the viewport (by swapping the
  * viewport meta tag) causes the viewport to automatically scroll. When
  * capturing, the initial document never has an active meta viewport tag.
  * Then, the rendered document injects one causing the aforementioned scroll.
@@ -424,7 +435,7 @@ Capture.isSetBodyInnerHTMLBroken = function(){
  * Open Radar: http://www.openradar.me/radar?id=5516452639539200
  * WebKit Bugzilla: https://bugs.webkit.org/show_bug.cgi?id=136904
  */
-Capture.ios8_0ScrollFix = function(doc, callback) {
+Capture.ios8AndGreaterScrollFix = function(doc, callback) {
     // Using `getElementsByTagName` here because grabbing head using
     // `document.head` will throw exceptions in some older browsers (iOS 4.3).
     var head = doc.getElementsByTagName('head');
@@ -552,8 +563,8 @@ Capture.prototype.render = function(htmlString) {
         });
     };
 
-    if (Capture.isIOS8_0()) {
-        Capture.ios8_0ScrollFix(document, write);
+    if (Capture.isIOS8OrGreater(window.navigator.userAgent)) {
+        Capture.ios8AndGreaterScrollFix(document, write);
     } else {
         write();
     }
