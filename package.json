@@ -1,6 +1,6 @@
 {
-  "name": "capturejs",
-  "version": "1.0.3",
+  "name": "mobify-capturejs",
+  "version": "1.0.4",
   "devDependencies": {
     "grunt": "~0.4.0",
     "grunt-browserify": "~1.3.1",
