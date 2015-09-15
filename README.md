@@ -2,6 +2,8 @@
 
 A library for capturing your DOM.
 
+[![npm version](https://badge.fury.io/js/mobify-capturejs.svg)](http://badge.fury.io/js/mobify-capturejs)
+
 ## How to use
 
 Right now, there are no instructions on how to use capture.js standalone. Please
