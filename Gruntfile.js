@@ -180,7 +180,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', ['browserify', 'uglify']);
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
-    grunt.registerTask('test', ['express', 'qunit']);
+    grunt.registerTask('test', ['build', 'express', 'qunit']);
     grunt.registerTask('serve', ['build', 'express', 'watch']);
     grunt.registerTask('deploy', ['s3']);
 };

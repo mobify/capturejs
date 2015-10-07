@@ -87,7 +87,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         bodyOpenTag: "<body bar=\"baz\">",
         headContent: "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n</head>\n",
         bodyContent: "\n    <!-- comment with <head> -->\n    <p>Plaintext example page!</p>\n    <script src=\"/path/to/script.js\"><\/script>\n</body>\n</html>\n\n"
-    }
+    };
 
     var captureCompare = function(actual, expected) {
         ok(compareHTMLStrings(actual.headContent, expected.headContent), "head content matches");
@@ -102,7 +102,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         delete expectedToCompare.bodyContent;
 
         deepEqual(actualToCompare, expectedToCompare);
-    }
+    };
 
     asyncTest("createDocumentFragmentsStrings - below head tag", function(){
         var iframe = $("<iframe>", {id: "plaintext-example9"});
@@ -243,20 +243,17 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append($iframe);
     });
 
-    asyncTest("ios8_0ScrollFix", function() {
+    // A metatag should not be inserted if it was not present in the original doc
+    asyncTest("ios8AndGreaterScrollFix", function() {
         var html = document.createElement('html');
         var head = document.createElement('head');
+
         html.appendChild(head);
 
         Capture.ios8AndGreaterScrollFix(html, function() {
-            var meta = html.getElementsByTagName('meta')[0]
+            var meta = html.getElementsByTagName('meta');
 
-            ok(true,
-                'meta tag is appended');
-            equal(meta.getAttribute('name'), 'viewport',
-                'meta name is viewport');
-            equal(meta.getAttribute('content'), 'width=device-width',
-                'content is width=device-width');
+            equal(meta.length, 0, 'meta tag should not have been appended');
 
             start();
         });

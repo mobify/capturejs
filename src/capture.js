@@ -439,11 +439,16 @@ Capture.ios8AndGreaterScrollFix = function(doc, callback) {
     // Using `getElementsByTagName` here because grabbing head using
     // `document.head` will throw exceptions in some older browsers (iOS 4.3).
     var head = doc.getElementsByTagName('head');
-    // Be extra safe and guard against `head` not existing.
-    if (!head.length) {
+    var viewport = doc.querySelector('meta[name="viewport"]');
+
+    // Be extra safe and guard against `head` not existing. We also don't need
+    // to do anything if the original source didn't have a viewport metatag.
+    if (!head.length || !viewport) {
+        callback && callback();
         return;
     }
-    var head = head[0];
+
+    head = head[0];
 
     var meta = document.createElement('meta');
     meta.setAttribute('name', 'viewport');
