@@ -145,32 +145,27 @@ module.exports = function(grunt) {
                 }
             }
         },
-        s3: {
-            options: {
-                access: "public-read",
-                headers: { "Cache-Control": "public,max-age=1800" }, // cache for 30 min
-                maxOperations: 6
-            },
+        aws_s3: {
             capturejs: {
                 options: {
                     bucket: 'mobify',
-                    gzip: true
+                    CacheControl: "public,max-age=1800", // cache for 30 min
                 },
-                upload: [
+                files: [
                     { // unminified dev build
-                        src: "build/capture.js",
+                        src: ["build/capture.js"],
                         dest: "capturejs/capture-<%= pkg.version %>.js",
                     },
                     { // unminified dev build to latest
-                        src: "build/capture.js",
+                        src: ["build/capture.js"],
                         dest: "capturejs/capture-latest.js",
                     },
                     { // minified production build
-                        src: "build/capture.min.js",
+                        src: ["build/capture.min.js"],
                         dest: "capturejs/capture-<%= pkg.version %>.min.js",
                     },
                     { // minified production build to latest
-                        src: "build/capture.min.js",
+                        src: ["build/capture.min.js"],
                         dest: "capturejs/capture-latest.min.js",
                     }
                 ]
@@ -180,15 +175,15 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-express');
     grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-aws-s3');
     grunt.loadNpmTasks('grunt-saucelabs');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-s3');
 
     grunt.registerTask('build', ['browserify', 'uglify']);
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
     grunt.registerTask('test', ['build', 'express:test', 'qunit']);
     grunt.registerTask('serve', ['build', 'express:capturejs', 'watch']);
-    grunt.registerTask('deploy', ['s3']);
+    grunt.registerTask('deploy', ['aws_s3']);
 };
