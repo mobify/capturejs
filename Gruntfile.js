@@ -10,6 +10,14 @@ module.exports = function(grunt) {
                     base: '.',
                     debug: true
                 }
+            },
+            test: {
+                options: {
+                    hostname: '0.0.0.0',
+                    port: 3001,
+                    base: '.',
+                    debug: true
+                }
             }
         },
         qunit: {
@@ -180,7 +188,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', ['browserify', 'uglify']);
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
-    grunt.registerTask('test', ['build', 'express', 'qunit']);
-    grunt.registerTask('serve', ['build', 'express', 'watch']);
+    grunt.registerTask('test', ['build', 'express:test', 'qunit']);
+    grunt.registerTask('serve', ['build', 'express:capturejs', 'watch']);
     grunt.registerTask('deploy', ['s3']);
 };
