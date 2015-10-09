@@ -439,11 +439,16 @@ Capture.ios8AndGreaterScrollFix = function(doc, callback) {
     // Using `getElementsByTagName` here because grabbing head using
     // `document.head` will throw exceptions in some older browsers (iOS 4.3).
     var head = doc.getElementsByTagName('head');
-    var viewport = doc.querySelector('meta[name="viewport"]');
+    var docViewport = doc.querySelector('meta[name="viewport"]');
+
+    // RTM-367: We set a fallback width of 980px in case we end up restoring the
+    // document. In the case of an adapted document, we get viewport width from
+    // our base dust template.
+    var viewportContent = (docViewport && docViewport.getAttribute('content')) || 'width=980';
 
     // Be extra safe and guard against `head` not existing. We also don't need
     // to do anything if the original source didn't have a viewport metatag.
-    if (!head.length || !viewport) {
+    if (!head.length) {
         callback && callback();
         return;
     }
@@ -452,7 +457,7 @@ Capture.ios8AndGreaterScrollFix = function(doc, callback) {
 
     var meta = document.createElement('meta');
     meta.setAttribute('name', 'viewport');
-    meta.setAttribute('content', 'width=device-width');
+    meta.setAttribute('content', viewportContent);
     head.appendChild(meta);
 
     if (callback) {
