@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html class="testclass">
+<head foo="bar">
+    <script>
+        // Simulate mobify
+        document.write("<plaintext style=\"display:none\">");
+    </script>
+</head>
+<body bar="baz">
+    <!-- comment with <head> -->
+    <p>Plaintext example page!</p>
+    <script src="/path/to/script.js"></script>
+
+    <script>
+        var capturing = window.Mobify && window.Mobify.capturing || false;
+
+        if (!capturing) {
+            // Tell parent we are ready
+            parent.postMessage("finished", "*");
+        }
+    </script>
+</body>
+</html>
+
