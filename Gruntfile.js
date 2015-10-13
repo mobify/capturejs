@@ -25,7 +25,7 @@ module.exports = function(grunt) {
               options: {
                 timeout: 20000,
                 urls: [
-                  'http://localhost:3000/tests/index.html',
+                  'http://localhost:3001/tests/index.html',
                 ]
               }
             }
