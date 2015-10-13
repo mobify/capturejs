@@ -249,7 +249,7 @@ require(["mobifyjs/utils", "capture"], function (Utils, Capture) {
         var head = document.createElement('head');
         html.appendChild(head);
 
-        Capture.ios8AndGreaterScrollFix(html, function () {
+        Capture.prototype.ios8AndGreaterScrollFix(html, function () {
             var meta = html.getElementsByTagName('meta')[0];
 
             ok(true,
@@ -274,7 +274,7 @@ require(["mobifyjs/utils", "capture"], function (Utils, Capture) {
         head.appendChild(meta);
         html.appendChild(head);
 
-        Capture.ios8AndGreaterScrollFix(html, function () {
+        Capture.prototype.ios8AndGreaterScrollFix(html, function () {
             var meta = html.getElementsByTagName('meta')[0];
 
             ok(true,

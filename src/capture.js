@@ -129,7 +129,7 @@ Capture.init = Capture.initCapture = function(callback, doc, prefix) {
         var capturedDOMFragments = capture.createDocumentFragments();
         Utils.extend(capture, capturedDOMFragments);
         callback(capture);
-    }
+    };
 
     if (Utils.domIsReady(doc)) {
         createCapture(callback, doc, prefix);
@@ -149,7 +149,7 @@ Capture.init = Capture.initCapture = function(callback, doc, prefix) {
                 iid && clearInterval(iid);
                 createCapture(callback, doc, prefix);
             }
-        }
+        };
         // backup with polling incase readystatechange doesn't fire
         // (happens with some Android 2.3 browsers)
         var iid = setInterval(function(){
@@ -435,11 +435,11 @@ Capture.isSetBodyInnerHTMLBroken = function(){
  * Open Radar: http://www.openradar.me/radar?id=5516452639539200
  * WebKit Bugzilla: https://bugs.webkit.org/show_bug.cgi?id=136904
  */
-Capture.ios8AndGreaterScrollFix = function(doc, callback) {
+Capture.prototype.ios8AndGreaterScrollFix = function(doc, callback) {
     // Using `getElementsByTagName` here because grabbing head using
     // `document.head` will throw exceptions in some older browsers (iOS 4.3).
     var head = doc.getElementsByTagName('head');
-    var docViewport = doc.querySelector('meta[name="viewport"]');
+    var docViewport = this.headEl && this.headEl.querySelector('meta[name="viewport"]');
 
     // RTM-367: We set a fallback width of 980px in case we end up restoring the
     // document. In the case of an adapted document, we get viewport width from
@@ -574,7 +574,7 @@ Capture.prototype.render = function(htmlString) {
     };
 
     if (Capture.isIOS8OrGreater(window.navigator.userAgent)) {
-        Capture.ios8AndGreaterScrollFix(document, write);
+        this.ios8AndGreaterScrollFix(document, write);
     } else {
         write();
     }
