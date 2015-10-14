@@ -435,19 +435,11 @@ Capture.isSetBodyInnerHTMLBroken = function(){
  * Open Radar: http://www.openradar.me/radar?id=5516452639539200
  * WebKit Bugzilla: https://bugs.webkit.org/show_bug.cgi?id=136904
  */
-Capture.prototype.ios8AndGreaterScrollFix = function(doc, callback) {
+Capture.ios8AndGreaterScrollFix = function(doc, callback) {
     // Using `getElementsByTagName` here because grabbing head using
     // `document.head` will throw exceptions in some older browsers (iOS 4.3).
     var head = doc.getElementsByTagName('head');
-    var docViewport = this.headEl && this.headEl.querySelector('meta[name="viewport"]');
-
-    // RTM-367: We set a fallback width of 980px in case we end up restoring the
-    // document. In the case of an adapted document, we get viewport width from
-    // our base dust template.
-    var viewportContent = (docViewport && docViewport.getAttribute('content')) || 'width=980';
-
-    // Be extra safe and guard against `head` not existing. We also don't need
-    // to do anything if the original source didn't have a viewport metatag.
+    // Be extra safe and guard against `head` not existing.
     if (!head.length) {
         callback && callback();
         return;
@@ -455,9 +447,9 @@ Capture.prototype.ios8AndGreaterScrollFix = function(doc, callback) {
 
     head = head[0];
 
-    var meta = document.createElement('meta');
+    var meta = doc.createElement('meta');
     meta.setAttribute('name', 'viewport');
-    meta.setAttribute('content', viewportContent);
+    meta.setAttribute('content', 'width=device-width');
     head.appendChild(meta);
 
     if (callback) {
@@ -480,6 +472,9 @@ Capture.prototype.ios8AndGreaterScrollFix = function(doc, callback) {
  */
 Capture.prototype.restore = function(inject) {
     var self = this;
+
+    // Set a flag indicating that we're restoring
+    this.disabled = true;
 
     Utils.waitForReady(document, function() {
         self.render(self.all(inject));
@@ -573,8 +568,12 @@ Capture.prototype.render = function(htmlString) {
         });
     };
 
-    if (Capture.isIOS8OrGreater(window.navigator.userAgent)) {
-        this.ios8AndGreaterScrollFix(document, write);
+    // RTM-367: We don't want to inject a viewport when restoring, because:
+    // - if a viewport existed in the original source, it'll be restored
+    // - if a viewport didn't exist in the original source, the browser will
+    //   automatically create one, and our fix isn't needed
+    if (Capture.isIOS8OrGreater(window.navigator.userAgent) && !this.disabled) {
+        Capture.ios8AndGreaterScrollFix(document, write);
     } else {
         write();
     }

@@ -3,6 +3,28 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
     module('Capturing');
 
+    /**
+     * This creates a fake HTML document, then adds the string given to it as the
+     * content or defaults to the simple markup provided here.
+     * It simply creates an iframe and then grabs the content.
+     */
+    var makeDocument = function(docHTML, disable) {
+        disable = (disable !== undefined) ? disable : true;
+        docHTML = docHTML || '<html><head></head><body></body></html>';
+        if (disable) {
+            docHTML = Capture.disable(docHTML, 'x-');
+        }
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        var doc = iframe.contentDocument;
+        doc.open();
+        doc.write(docHTML);
+        doc.close();
+
+        return doc;
+    };
+
     // Test disabling attributes that cause resource loading
     test("disable", function() {
         var html = $("#disable-test-fixture").text();
@@ -243,51 +265,45 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append($iframe);
     });
 
-    // Ensure that a metatag is appended to the document if one is not present
+    // Ensure that a meta viewport tag is added to the document if one is not present
     asyncTest("ios8_0ScrollFix", function() {
-        var html = document.createElement('html');
-        var head = document.createElement('head');
-        html.appendChild(head);
+        var doc = makeDocument();
 
-        Capture.prototype.ios8AndGreaterScrollFix(html, function() {
-            var meta = html.getElementsByTagName('meta')[0];
+        Capture.ios8AndGreaterScrollFix(doc, function() {
+            var meta = doc.getElementsByTagName('meta')[0];
 
             ok(true,
                 'meta tag is appended');
             equal(meta.getAttribute('name'), 'viewport',
                 'meta name is viewport');
-            equal(meta.getAttribute('content'), 'width=980', 'content is width=980');
+            equal(meta.getAttribute('content'), 'width=device-width', 'content is not width=device-width');
 
             start();
         });
     });
 
-    // Ensure that a metatag is appended to the document if one is not present
-    asyncTest("document viewport is restored", function() {
-        var html = document.createElement('html');
-        var head = document.createElement('head');
-        var meta = document.createElement('meta');
+    // Ensure that source document meta viewport tag is restored properly
+    asyncTest("source document viewport is restored", function() {
+        var html = '<html><head><meta name="viewport" content="width=980" /></head></html>';
+        var doc = makeDocument(html);
 
-        meta.setAttribute('name', 'viewport');
-        meta.setAttribute('content', 'width=device-width');
-
-        head.appendChild(meta);
-        html.appendChild(head);
-
-        Capture.prototype.ios8AndGreaterScrollFix(html, function() {
-            var meta = html.getElementsByTagName('meta')[0];
+        Capture.ios8AndGreaterScrollFix(doc, function() {
+            var meta = doc.getElementsByTagName('meta')[0];
 
             ok(true,
                 'meta tag is appended');
             equal(meta.getAttribute('name'), 'viewport',
                 'meta name is viewport');
-            equal(meta.getAttribute('content'), 'width=device-width',
-                'document viewport is restored');
+            equal(meta.getAttribute('content'), 'width=980',
+                'source document viewport was not restored');
 
             start();
         });
     });
 
+    // Do not be alarmed about "Error: INVALID_CHARACTER_ERR: DOM Exception 5"
+    // during this test --- this is an indication the function is working as
+    // intended, i.e. it should not clone invalid attributes
     test("cloneAttributes", function() {
         var el = document.createElement("div");
         Capture.cloneAttributes("<div class=\"test1 test2\"></div>", el);
