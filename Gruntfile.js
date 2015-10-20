@@ -54,18 +54,18 @@ module.exports = function(grunt) {
                     // Set the Saucelabs username and key in your environment variables
                     // by setting SAUCE_USERNAME and SAUCE_ACCESS_KEY
                     urls: [
-                        'http://localhost:3000/tests/index.html'
+                        'http://localhost:3001/tests/index.html'
                     ],
                     concurrency: 16,
                     tunneled: true,
                     detailedError: true,
                     browsers: [ //https://saucelabs.com/docs/platforms
-                        { // Only working version of IE compatable
+                        { // Only working version of IE compatible
                             browserName: 'internet explorer',
                             platform: 'Windows 2012',
                             version: '10'
                         },
-                        { // Only working version of IE compatable
+                        { // Only working version of IE compatible
                             browserName: 'internet explorer',
                             platform: 'Windows 8.1',
                             version: '11'
