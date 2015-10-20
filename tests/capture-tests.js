@@ -282,25 +282,6 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         });
     });
 
-    // Ensure that source document meta viewport tag is restored properly
-    asyncTest("source document viewport is restored", function() {
-        var html = '<html><head><meta name="viewport" content="width=980" /></head></html>';
-        var doc = makeDocument(html);
-
-        Capture.ios8AndGreaterScrollFix(doc, function() {
-            var meta = doc.getElementsByTagName('meta')[0];
-
-            ok(true,
-                'meta tag is appended');
-            equal(meta.getAttribute('name'), 'viewport',
-                'meta name is viewport');
-            equal(meta.getAttribute('content'), 'width=980',
-                'source document viewport is restored');
-
-            start();
-        });
-    });
-
     // Do not be alarmed about "Error: INVALID_CHARACTER_ERR: DOM Exception 5"
     // during this test --- this is an indication the function is working as
     // intended, i.e. it should not clone invalid attributes
