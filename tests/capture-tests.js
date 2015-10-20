@@ -276,7 +276,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
                 'meta tag is appended');
             equal(meta.getAttribute('name'), 'viewport',
                 'meta name is viewport');
-            equal(meta.getAttribute('content'), 'width=device-width', 'content is not width=device-width');
+            equal(meta.getAttribute('content'), 'width=device-width', 'content is width=device-width');
 
             start();
         });
@@ -295,7 +295,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             equal(meta.getAttribute('name'), 'viewport',
                 'meta name is viewport');
             equal(meta.getAttribute('content'), 'width=980',
-                'source document viewport was not restored');
+                'source document viewport is restored');
 
             start();
         });
