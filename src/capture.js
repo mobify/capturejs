@@ -129,7 +129,7 @@ Capture.init = Capture.initCapture = function(callback, doc, prefix) {
         var capturedDOMFragments = capture.createDocumentFragments();
         Utils.extend(capture, capturedDOMFragments);
         callback(capture);
-    }
+    };
 
     if (Utils.domIsReady(doc)) {
         createCapture(callback, doc, prefix);
@@ -149,7 +149,7 @@ Capture.init = Capture.initCapture = function(callback, doc, prefix) {
                 iid && clearInterval(iid);
                 createCapture(callback, doc, prefix);
             }
-        }
+        };
         // backup with polling incase readystatechange doesn't fire
         // (happens with some Android 2.3 browsers)
         var iid = setInterval(function(){
@@ -441,11 +441,13 @@ Capture.ios8AndGreaterScrollFix = function(doc, callback) {
     var head = doc.getElementsByTagName('head');
     // Be extra safe and guard against `head` not existing.
     if (!head.length) {
+        callback && callback();
         return;
     }
-    var head = head[0];
 
-    var meta = document.createElement('meta');
+    head = head[0];
+
+    var meta = doc.createElement('meta');
     meta.setAttribute('name', 'viewport');
     meta.setAttribute('content', 'width=device-width');
     head.appendChild(meta);
@@ -470,6 +472,9 @@ Capture.ios8AndGreaterScrollFix = function(doc, callback) {
  */
 Capture.prototype.restore = function(inject) {
     var self = this;
+
+    // Set a flag indicating that we're restoring
+    this.disabled = true;
 
     Utils.waitForReady(document, function() {
         self.render(self.all(inject));
@@ -563,7 +568,11 @@ Capture.prototype.render = function(htmlString) {
         });
     };
 
-    if (Capture.isIOS8OrGreater(window.navigator.userAgent)) {
+    // RTM-367: We don't want to inject a viewport when restoring, because:
+    // - if a viewport existed in the original source, it'll be restored
+    // - if a viewport didn't exist in the original source, the browser will
+    //   automatically create one, and our fix isn't needed
+    if (Capture.isIOS8OrGreater(window.navigator.userAgent) && !this.disabled) {
         Capture.ios8AndGreaterScrollFix(document, write);
     } else {
         write();

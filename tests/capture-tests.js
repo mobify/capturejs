@@ -3,6 +3,28 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
     module('Capturing');
 
+    /**
+     * This creates a fake HTML document, then adds the string given to it as the
+     * content or defaults to the simple markup provided here.
+     * It simply creates an iframe and then grabs the content.
+     */
+    var makeDocument = function(docHTML, disable) {
+        disable = (disable !== undefined) ? disable : true;
+        docHTML = docHTML || '<html><head></head><body></body></html>';
+        if (disable) {
+            docHTML = Capture.disable(docHTML, 'x-');
+        }
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        var doc = iframe.contentDocument;
+        doc.open();
+        doc.write(docHTML);
+        doc.close();
+
+        return doc;
+    };
+
     // Test disabling attributes that cause resource loading
     test("disable", function() {
         var html = $("#disable-test-fixture").text();
@@ -18,7 +40,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             "</body>" +
             "</html>";
 
-        ok(compareHTMLStrings(Capture.disable(html, "x-"), expectedHtml), "Passed!" );
+        ok(compareHTMLStrings(Capture.disable(html, "x-"), expectedHtml), "Passed!");
     });
 
     // Test enabling attributes that cause resource loading
@@ -36,20 +58,20 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             "</body>" +
             "</html>";
 
-        ok(compareHTMLStrings(Capture.enable(html, "x-"), expectedHtml), "Passed!" );
+        ok(compareHTMLStrings(Capture.enable(html, "x-"), expectedHtml), "Passed!");
     });
 
-    test("openTag", function(){
+    test("openTag", function() {
         var element = $("#foo-element");
         var openTag = Capture.openTag(element);
         ok((openTag === "<div id=\"foo-element\" foo=\"bar\">") ||
             openTag === "<div foo=\"bar\" id=\"foo-element\">");
     });
 
-    asyncTest("createDocumentFromSource", function(){
+    asyncTest("createDocumentFromSource", function() {
         var iframe = $("<iframe>", {id: "plaintext-example"});
         iframe.attr("src", "/tests/fixtures/plaintext-example.html")
-        iframe.one('load', function(){
+        iframe.one('load', function() {
             var doc = this.contentDocument;
 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
@@ -104,15 +126,15 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         deepEqual(actualToCompare, expectedToCompare);
     }
 
-    asyncTest("createDocumentFragmentsStrings - below head tag", function(){
+    asyncTest("createDocumentFragmentsStrings - below head tag", function() {
         var iframe = $("<iframe>", {id: "plaintext-example9"});
         iframe.attr("src", "/tests/fixtures/plaintext-example.html")
-        iframe.one('load', function(){
+        iframe.one('load', function() {
             var doc = this.contentDocument;
 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
-           // alert(doc.getElementsByTagName("html")[0].innerHTML);
+            // alert(doc.getElementsByTagName("html")[0].innerHTML);
             var capture = Capture.createDocumentFragmentsStrings(doc);
             // We're not testing the all function here, let's remove it
             delete capture.all;
@@ -122,10 +144,10 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append(iframe);
     });
 
-    asyncTest("createDocumentFragmentsStrings - above head tag", function(){
+    asyncTest("createDocumentFragmentsStrings - above head tag", function() {
         var iframe = $("<iframe>", {id: "plaintext-example2"});
         iframe.attr("src", "/tests/fixtures/plaintext-above-head-example.html")
-        iframe.one('load', function(){
+        iframe.one('load', function() {
             var doc = this.contentDocument;
             //alert(doc.getElementsByTagName("html")[0].innerHTML);
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
@@ -139,10 +161,10 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append(iframe);
     });
 
-    asyncTest("createDocumentFragmentsStrings - malformed markup", function(){
+    asyncTest("createDocumentFragmentsStrings - malformed markup", function() {
         var iframe = $("<iframe>", {id: "plaintext-example4"});
         iframe.attr("src", "/tests/fixtures/plaintext-malformed-markup-example.html")
-        iframe.one('load', function(){
+        iframe.one('load', function() {
             var doc = this.contentDocument;
             //alert(doc.getElementsByTagName("html")[0].innerHTML);
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
@@ -160,10 +182,10 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append(iframe);
     });
 
-    asyncTest("createDocumentFragmentsStrings - no end head tag", function(){
+    asyncTest("createDocumentFragmentsStrings - no end head tag", function() {
         var iframe = $("<iframe>", {id: "plaintext-example5"});
         iframe.attr("src", "/tests/fixtures/plaintext-no-end-head-example.html")
-        iframe.one('load', function(){
+        iframe.one('load', function() {
             var doc = this.contentDocument;
 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
@@ -182,7 +204,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     asyncTest("createDocumentFragmentsStrings - script with opening body", function() {
         var iframe = $("<iframe>", {id: "plaintext-example5"});
         iframe.attr("src", "/tests/fixtures/plaintext-script-with-opening-body.html")
-        iframe.one('load', function(){
+        iframe.one('load', function() {
             var doc = this.contentDocument;
 
             // @jb: I don't get this?
@@ -243,26 +265,27 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append($iframe);
     });
 
+    // Ensure that a meta viewport tag is added to the document with width = device-width
     asyncTest("ios8_0ScrollFix", function() {
-        var html = document.createElement('html');
-        var head = document.createElement('head');
-        html.appendChild(head);
+        var doc = makeDocument();
 
-        Capture.ios8AndGreaterScrollFix(html, function() {
-            var meta = html.getElementsByTagName('meta')[0]
+        Capture.ios8AndGreaterScrollFix(doc, function() {
+            var meta = doc.getElementsByTagName('meta')[0];
 
             ok(true,
                 'meta tag is appended');
             equal(meta.getAttribute('name'), 'viewport',
                 'meta name is viewport');
-            equal(meta.getAttribute('content'), 'width=device-width',
-                'content is width=device-width');
+            equal(meta.getAttribute('content'), 'width=device-width', 'content is width=device-width');
 
             start();
         });
     });
 
-    test("cloneAttributes", function(){
+    // Do not be alarmed about "Error: INVALID_CHARACTER_ERR: DOM Exception 5"
+    // during this test --- this is an indication the function is working as
+    // intended, i.e. it should not clone invalid attributes
+    test("cloneAttributes", function() {
         var el = document.createElement("div");
         Capture.cloneAttributes("<div class=\"test1 test2\"></div>", el);
 
@@ -283,20 +306,20 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     });
 
 
-    test("removeCloseEndTagsAtEndOfString", function(){
+    test("removeCloseEndTagsAtEndOfString", function() {
         var html = "</div><div>";
         equal(Capture.removeClosingTagsAtEndOfString(html), html);
 
         var html = "<html><head>\n</head>\n<body><h1></h1></body ></html>";
         var expectedHtml = "<html><head>\n</head>\n<body><h1>";
         ok(compareHTMLStrings(Capture.removeClosingTagsAtEndOfString(html), expectedHtml));
-    })
+    });
 
-    test("removeTargetSelf", function(){
+    test("removeTargetSelf", function() {
         var html = "<a href='' target=\"_self\" target='_self'>";
         var expectedHtml = "<a href=''  >";
         ok(compareHTMLStrings(Capture.removeTargetSelf(html), expectedHtml));
-    })
+    });
 
     /**
      * Ensure the complete document is captured.
@@ -389,8 +412,11 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append($iframe);
     });
 
-    asyncTest("Capture.restore", function(){
-        var $iframe = $("<iframe>", {id: "plaintext-example201", src: "/tests/fixtures/plaintext-restore-example.html"});
+    asyncTest("Capture.restore", function() {
+        var $iframe = $("<iframe>", {
+            id: "plaintext-example201",
+            src: "/tests/fixtures/plaintext-restore-example.html"
+        });
         var el = $iframe[0];
 
         var expectedHTML =
@@ -418,7 +444,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             start();
         }, false);
 
-        $iframe.one('load', function(){
+        $iframe.one('load', function() {
             var doc = this.contentDocument;
 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
@@ -433,14 +459,14 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
     /**
      * Regressions test for iOS8 where sibling forms got written out
-     * as children of eachother.
+     * as children of each other.
      */
-    asyncTest("createDocumentSiblingForms", function(){
+    asyncTest("createDocumentSiblingForms", function() {
         var iframe = $("<iframe>", {
             id: "plaintext-sibling-forms",
             src: "/tests/fixtures/plaintext-sibling-forms.html"
         });
-        iframe.one('load', function(){
+        iframe.one('load', function() {
             var doc = this.contentDocument;
 
             Capture.init(function(capture) {
@@ -457,9 +483,9 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     });
 
     /**
-    * Test for ADJS-92: iOS 8.0 smart banner issue.
-    * Ensure that smart banners above the tag are removed during capturing.
-    **/
+     * Test for ADJS-92: iOS 8.0 smart banner issue.
+     * Ensure that smart banners above the tag are removed during capturing.
+     **/
     asyncTest("Remove smart banner when above the tag - iOS8_0 only", function() {
         var $iframe = $("<iframe>", {
             id: "smart-banner-above-tag",
@@ -478,9 +504,9 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     });
 
     /**
-    * Test for ADJS-92: iOS 8.0 smart banner issue.
-    * Ensure that smart banners below the tag are not removed on IOS8
-    **/
+     * Test for ADJS-92: iOS 8.0 smart banner issue.
+     * Ensure that smart banners below the tag are not removed on IOS8
+     **/
     asyncTest("Leave smart banner in place when below the tag - iOS8_0 only", function() {
         var $iframe = $("<iframe>", {
             id: "smart-banner-below-tag",
