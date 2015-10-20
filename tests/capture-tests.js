@@ -265,7 +265,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         $("#qunit-fixture").append($iframe);
     });
 
-    // Ensure that a meta viewport tag is added to the document if one is not present
+    // Ensure that a meta viewport tag is added to the document with width = device-width
     asyncTest("ios8_0ScrollFix", function() {
         var doc = makeDocument();
 
