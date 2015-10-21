@@ -185,5 +185,5 @@ module.exports = function(grunt) {
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
     grunt.registerTask('test', ['build', 'express:test', 'qunit']);
     grunt.registerTask('serve', ['build', 'express:capturejs', 'watch']);
-    grunt.registerTask('deploy', ['aws_s3']);
+    grunt.registerTask('deploy', ['build', 'aws_s3']);
 };
