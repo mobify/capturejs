@@ -149,7 +149,9 @@ module.exports = function(grunt) {
             capturejs: {
                 options: {
                     bucket: 'mobify',
-                    CacheControl: "public,max-age=1800", // cache for 30 min
+                    params: {
+                        CacheControl: "public,max-age=1800", // cache for 30 min
+                    }
                 },
                 files: [
                     { // unminified dev build
