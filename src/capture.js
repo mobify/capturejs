@@ -266,7 +266,7 @@ Capture.setElementContentFromString = function(el, htmlString) {
  * positives for `captured.headContent`
  */
 Capture.removeCommentedHeadEls = function(str) {
-    return str.replace(new RegExp('<!--[\\s\\S]*<head>[^>]*-->'), '');
+    return str.replace(new RegExp('<!--[\\s\\S]*<head([\\s].*)?>[^>]*-->'), '');
 };
 
 /**
