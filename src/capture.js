@@ -328,6 +328,15 @@ Capture.setElementContentFromString = function(el, htmlString) {
         // <head> content should be everything before this.
         captured.headContent = rawHTML.slice(0, match.index);
 
+        // Ensure that there are no comment tags with <head> in them,
+        // or the following setup will cause problems:
+        //
+        // <html>
+        // <head foo="bar">
+        // <!-- <head> begin -->
+        // <plaintext>
+        captured.headContent = captured.headContent.replace(new RegExp('<!--[\\s\\S]*<head>[^>]*-->'), '');
+
         // Edgecase: `capture.headContent` contains `<head>` if Tag is placed
         // before <head>.
         //
