@@ -109,7 +109,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         bodyOpenTag: "<body bar=\"baz\">",
         headContent: "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n</head>\n",
         bodyContent: "\n    <!-- comment with <head> -->\n    <p>Plaintext example page!</p>\n    <script src=\"/path/to/script.js\"><\/script>\n</body>\n</html>\n\n"
-    }
+    };
 
     var captureCompare = function(actual, expected) {
         ok(compareHTMLStrings(actual.headContent, expected.headContent), "head content does not match");
@@ -127,30 +127,50 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     }
 
 
-    asyncTest("createDocumentFragmentsStrings - <head> in HTML comment", function() {
-        var expected = {
+    asyncTest("createDocumentFragmentsStrings - head in comment tag", function() {
+        var expectedCapture = {
             doctype: "<!DOCTYPE HTML>",
-            htmlOpenTag: "<html>",
-            headOpenTag: "<head>",
-            bodyOpenTag: "<body>",
-            headContent: "<!-- TODO -->",
-            bodyContent: ""
+            htmlOpenTag: "<html class=\"testclass\">",
+            headOpenTag: "<head foo=\"bar\">",
+            bodyOpenTag: "<body bar=\"baz\">",
+            headContent: "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n</head>\n",
+            bodyContent: "\n    <!-- comment with <head> -->\n    <p>Plaintext example page!</p>\n    <script src=\"/path/to/script.js\"><\/script>\n</body>\n</html>\n\n"
         };
-
-
         var iframe = $("<iframe>", {id: "plaintext-head-in-comment"});
         iframe.attr("src", "/tests/fixtures/plaintext-head-in-comment.html")
         iframe.one('load', function() {
             var doc = this.contentDocument;
-
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
-            // alert(doc.getElementsByTagName("html")[0].innerHTML);
             var capture = Capture.createDocumentFragmentsStrings(doc);
             // We're not testing the all function here, let's remove it
             delete capture.all;
+            captureCompare(capture, expectedCapture);
 
-            captureCompare(capture, expected);
+            start();
+        });
+        $("#qunit-fixture").append(iframe);
+    });
+
+    asyncTest("createDocumentFragmentsStrings - body in comment tag", function() {
+        var expectedCapture = {
+            doctype: "<!DOCTYPE HTML>",
+            htmlOpenTag: "<html class=\"testclass\">",
+            headOpenTag: "<head foo=\"bar\">",
+            bodyOpenTag: "<body bar=\"baz\">",
+            headContent: "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n</head>\n<!-- <body class=\"bad\"> -->\n",
+            bodyContent: "\n    <!-- comment with <head> -->\n    <p>Plaintext example page!</p>\n    <script src=\"/path/to/script.js\"><\/script>\n</body>\n</html>\n\n"
+        };
+        var iframe = $("<iframe>", {id: "plaintext-body-in-comment"});
+        iframe.attr("src", "/tests/fixtures/plaintext-body-in-comment.html")
+        iframe.one('load', function() {
+            var doc = this.contentDocument;
+            // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
+            var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
+            var capture = Capture.createDocumentFragmentsStrings(doc);
+            // We're not testing the all function here, let's remove it
+            delete capture.all;
+            captureCompare(capture, expectedCapture);
 
             start();
         });
