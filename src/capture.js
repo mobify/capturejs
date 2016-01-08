@@ -262,6 +262,14 @@ Capture.setElementContentFromString = function(el, htmlString) {
 };
 
 /**
+ * Remove <head> tags within HTML comments, which would otherwise return false
+ * positives for `captured.headContent`
+ */
+Capture.removeCommentedHeadEls = function(str) {
+    return str.replace(new RegExp('<!--[\\s\\S]*<head>[^>]*-->'), '');
+};
+
+/**
  * Returns an object containing the state of the original page. Caches the object
  * in `extractedHTML` for later use.
  */
@@ -335,7 +343,7 @@ Capture.setElementContentFromString = function(el, htmlString) {
         // <head foo="bar">
         // <!-- <head> begin -->
         // <plaintext>
-        captured.headContent = captured.headContent.replace(new RegExp('<!--[\\s\\S]*<head>[^>]*-->'), '');
+        captured.headContent = Capture.removeCommentedHeadEls(captured.headContent);
 
         // Edgecase: `capture.headContent` contains `<head>` if Tag is placed
         // before <head>.

@@ -126,6 +126,23 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         deepEqual(actualToCompare, expectedToCompare);
     }
 
+    test("removeCommentedHeadEls", function() {
+        var expectedResults = {
+            "<head></head>": "<head></head>",
+            "<head>\n\n<!-- some text --></head>": "<head>\n\n<!-- some text --></head>",
+            "<head>\n\n<!-- <head>some text --></head>": "<head>\n\n</head>",
+            "<head>\n\n<!-- <head blah blah>some text --></head>": "<head>\n\n</head>",
+            "<head>\n\n<!-- <header>some text --></head>": "<head>\n\n<!-- <header>some text --></head>",
+            "<head>\n\n<!-- <head>some text</head> --></head>": "<head>\n\n</head>",
+            "<body>\n\n<!-- <head>some text</head> --></body>": "<body>\n\n<!-- <head>some text</head> --></body>",
+        };
+
+        for (var key in expectedResults) {
+            if (expectedResults.hasOwnProperty(key)) {
+                equal(Capture.removeCommentedHeadEls(key), expectedResults[key]);
+            }
+        }
+    });
 
     asyncTest("createDocumentFragmentsStrings - head in comment tag", function() {
         var expectedCapture = {
