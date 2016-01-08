@@ -133,7 +133,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             htmlOpenTag: "<html class=\"testclass\">",
             headOpenTag: "<head foo=\"bar\">",
             bodyOpenTag: "<body bar=\"baz\">",
-            headContent: "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n</head>\n",
+            headContent: "\n    \n    <link rel=\"stylesheet\" href=\"/path/to/stylesheet.css\">\n<!-- </head> end -->\n</head>\n",
             bodyContent: "\n    <!-- comment with <head> -->\n    <p>Plaintext example page!</p>\n    <script src=\"/path/to/script.js\"><\/script>\n</body>\n</html>\n\n"
         };
         var iframe = $("<iframe>", {id: "plaintext-head-in-comment"});
@@ -146,6 +146,8 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             // We're not testing the all function here, let's remove it
             delete capture.all;
             captureCompare(capture, expectedCapture);
+            console.dir(capture);
+            console.dir(expectedCapture);
 
             start();
         });
