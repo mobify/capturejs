@@ -137,7 +137,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             "<head>\n\n<!-- <head blah blah>some text --></head>": "<head>\n\n</head>",
             "<head>\n\n<!-- <header>some text --></head>": "<head>\n\n<!-- <header>some text --></head>",
             // Ignore the <head> in the comment if it's closed
-            "<head>\n\n<!-- <head>some text</head> --></head>": "<head>\n\n<!-- <head>some text</head> --></head>"
+            "<head>\n\n<!-- <head>some text</head> --></head>": "<head>\n\n</head>"
         };
 
         for (var key in expectedResults) {
