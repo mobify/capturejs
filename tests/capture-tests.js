@@ -129,8 +129,11 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
     test("removeCommentedHeadEls", function() {
         var expectedResults = {
             "<head></head>": "<head></head>",
+            "<head>": "<head>",
             "<head>\n\n<!-- some text --></head>": "<head>\n\n<!-- some text --></head>",
             "<head>\n\n<!-- <head>some text --></head>": "<head>\n\n</head>",
+            "<head>\n\n<!-- <head> --><!-- <head> --></head>": "<head>\n\n</head>",
+            "<head>\n\n<!-- some text <head> --></head>": "<head>\n\n</head>",
             "<head>\n\n<!-- <head blah blah>some text --></head>": "<head>\n\n</head>",
             "<head>\n\n<!-- <header>some text --></head>": "<head>\n\n<!-- <header>some text --></head>",
             // Ignore the <head> in the comment if it's closed
@@ -138,9 +141,10 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         };
 
         for (var key in expectedResults) {
-            if (expectedResults.hasOwnProperty(key)) {
-                equal(Capture.removeCommentedHeadEls(key), expectedResults[key]);
+            if (!expectedResults.hasOwnProperty(key)) {
+                return;
             }
+            equal(Capture.removeCommentedHeadEls(key), expectedResults[key]);
         }
     });
 
