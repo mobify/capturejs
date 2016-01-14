@@ -1,3 +1,6 @@
+1.0.6
+    - Fixed issue where <!-- --> comments containing '<head>' created false
+      positives when looking for the <head> section in HTML
 1.0.5
     - iOS8+ scroll fix is applied only when rendering an adapted document,
       resolving an issue with meta viewport tags and restored documents (PR #11)

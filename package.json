@@ -1,6 +1,6 @@
 {
   "name": "mobify-capturejs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "devDependencies": {
     "grunt": "~0.4.0",
     "grunt-aws-s3": "^0.14.0",
