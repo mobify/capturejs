@@ -166,8 +166,6 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             // We're not testing the all function here, let's remove it
             delete capture.all;
             captureCompare(capture, expectedCapture);
-            console.dir(capture);
-            console.dir(expectedCapture);
 
             start();
         });
