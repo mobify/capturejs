@@ -46,7 +46,7 @@ module.exports = function(grunt) {
         watch: {
             files: ["src/**/*.js"
             ],
-            tasks: ['build'],
+            tasks: ['build','capturejs','captureminjs'],
         },
         'saucelabs-qunit': {
             capturejs: {

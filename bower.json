@@ -3,7 +3,7 @@
     "version": "1.0.6",
     "main": "build/capture.min.js",
     "dependencies": {
-        "mobifyjs-utils": "git://github.com/mobify/mobifyjs-utils.git#1.0.0"
+        "mobifyjs-utils": "git://github.com/mobify/mobifyjs-utils.git#dom-ready-check"
     },
     "ignore": [
         "tests",
