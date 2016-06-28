@@ -46,7 +46,7 @@ module.exports = function(grunt) {
         watch: {
             files: ["src/**/*.js"
             ],
-            tasks: ['build'],
+            tasks: ['build','capturejs','captureminjs'],
         },
         'saucelabs-qunit': {
             capturejs: {
@@ -182,6 +182,22 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+
+    // Copy capture.js to improvements app folder
+    grunt.registerTask('capturejs', function() {
+        var path = 'build/capture.js';
+        if (grunt.file.exists(path)) {
+            grunt.file.copy(path, '../%PROJECT%/capture.js');
+        }
+    });
+
+    // Copy capture.min.js to improvements app folder
+    grunt.registerTask('captureminjs', function() {
+        var path = 'build/capture.min.js';
+        if (grunt.file.exists(path)) {
+            grunt.file.copy(path, '../%PROJECT%/capture.min.js');
+        }
+    });
 
     grunt.registerTask('build', ['browserify', 'uglify']);
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
