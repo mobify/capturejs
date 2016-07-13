@@ -183,7 +183,23 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('build', ['browserify', 'uglify']);
+    // Copy capture.js to improvements app folder
+    grunt.registerTask('capturejs', function() {
+        var path = 'build/capture.js';
+        if (grunt.file.exists(path)) {
+            grunt.file.copy(path, '../cornerstone-improvements/app/capture.js');
+        }
+    });
+
+    // Copy capture.min.js to improvements app folder
+    grunt.registerTask('captureminjs', function() {
+        var path = 'build/capture.min.js';
+        if (grunt.file.exists(path)) {
+            grunt.file.copy(path, '../cornerstone-improvements/app/capture.min.js');
+        }
+    });
+
+    grunt.registerTask('build', ['browserify', 'uglify','capturejs', 'captureminjs']);
     grunt.registerTask('saucelabs', ['test', 'saucelabs-qunit']);
     grunt.registerTask('test', ['build', 'express:test', 'qunit']);
     grunt.registerTask('serve', ['build', 'express:capturejs', 'watch']);
