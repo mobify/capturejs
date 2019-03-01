@@ -626,4 +626,89 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         ok(!Capture.isIOS8OrGreater('lorem ipsum mobile browser 9.0'), 'Nonsense');
     });
 
+    asyncTest(
+      "createDocumentFragmentsStrings - head in comment tag: delete plaintext tag in source?????",
+      function() {
+        var expectedCapture = {
+          doctype: "<!DOCTYPE HTML>",
+          htmlOpenTag: '<html class="testclass">',
+          headOpenTag: '<head foo="bar">',
+          bodyOpenTag: '<body bar="baz">',
+          headContent:
+            '\n\n    \n    <link rel="stylesheet" href="/path/to/stylesheet.css">\n<!-- </head> end -->\n</head>\n',
+          bodyContent:
+            '\n    <!-- comment with <head> -->\n    <p>Plaintext example page!</p>\n    <script src="/path/to/script.js"></script>\n</body>\n</html>\n'
+        };
+
+        var iframe = $("<iframe>", { id: "plaintext-head-in-comment" });
+        iframe.attr("src", "/tests/fixtures/plaintext-head-in-comment.html");
+        iframe.one("load", function() {
+          var doc = this.contentDocument;
+
+          // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
+          var htmlEl = doc
+            .getElementsByTagName("html")[0]
+            .removeAttribute("webdriver");
+
+          debugger;
+          ok(doc.querySelector("plaintext") !== null, "plaintext is in document");
+          // doc has plaintext
+
+          Capture.init(function(capture) {
+            debugger;
+
+            //capture content should have all body content and head content etc.
+            // check capture.capturedDoc has the body and head content in the document
+            ok(
+              compareHTMLStrings(
+                capture.bodyContent,
+                expectedCapture.bodyContent
+              ),
+              "bodyContent matches"
+            );
+            ok(
+              compareHTMLStrings(
+                capture.bodyOpenTag,
+                expectedCapture.bodyOpenTag
+              ),
+              "bodyOpenTag matches"
+            );
+            ok(
+              compareHTMLStrings(capture.doctype, expectedCapture.doctype),
+              "doctype matches"
+            );
+            ok(
+              compareHTMLStrings(
+                capture.headContent,
+                expectedCapture.headContent
+              ),
+              "headContent matches"
+            );
+            ok(
+              compareHTMLStrings(
+                capture.headOpenTag,
+                expectedCapture.headOpenTag
+              ),
+              "headOpenTag matches"
+            );
+            ok(
+              compareHTMLStrings(
+                capture.htmlOpenTag,
+                expectedCapture.htmlOpenTag
+              ),
+              "htmlOpenTag matches"
+            );
+            // captureCompare(capture, expectedCapture);
+          }, doc);
+          debugger;
+          ok(
+            doc.querySelector("plaintext") === null,
+            "plaintext is removed from document"
+          );
+          // check sourceDoc does not have plaintext anymore
+          start();
+        });
+        $("#qunit-fixture").append(iframe);
+      }
+    );
 });
