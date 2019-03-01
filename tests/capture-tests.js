@@ -652,13 +652,8 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
           debugger;
           ok(doc.querySelector("plaintext") !== null, "plaintext is in document");
-          // doc has plaintext
 
           Capture.init(function(capture) {
-            debugger;
-
-            //capture content should have all body content and head content etc.
-            // check capture.capturedDoc has the body and head content in the document
             ok(
               compareHTMLStrings(
                 capture.bodyContent,
@@ -674,7 +669,9 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
               "bodyOpenTag matches"
             );
             ok(
-              compareHTMLStrings(capture.doctype, expectedCapture.doctype),
+              compareHTMLStrings(
+                capture.doctype,
+                expectedCapture.doctype),
               "doctype matches"
             );
             ok(
@@ -698,14 +695,12 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
               ),
               "htmlOpenTag matches"
             );
-            // captureCompare(capture, expectedCapture);
           }, doc);
-          debugger;
+          debugger
           ok(
             doc.querySelector("plaintext") === null,
             "plaintext is removed from document"
           );
-          // check sourceDoc does not have plaintext anymore
           start();
         });
         $("#qunit-fixture").append(iframe);
