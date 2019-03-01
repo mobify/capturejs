@@ -106,6 +106,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
                     "</html>";
 
                 var html = capture.enabledHTMLString(capturedDoc);
+                ok(doc.querySelector('plaintext') === null, "plaintext is removed")
                 ok(compareHTMLStrings(html, expectedHtml), "Passed!");
                 start();
             }, doc);
@@ -546,9 +547,10 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
             ok(compareHTMLStrings(doc.querySelector('plaintext').innerHTML, expectedPlaintext), 'plaintext added')
             Capture.init(function(capture) {
+                ok(doc.querySelector('plaintext') === null, "plaintext is removed")
                 capture.restore('<script>parent.postMessage("done!", "*");<\/script>');
             }, doc);
-            ok(doc.querySelector('plaintext') === null, 'plaintext removed')
+            ok(doc.querySelector('plaintext') === null, 'plaintext is removed')
         });
         $("#qunit-fixture").append($iframe);
     });
@@ -578,12 +580,13 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
                 var capturedDoc = capture.capturedDoc;
 
                 var bodyChildren = capturedDoc.body.children;
+                ok(doc.querySelector('plaintext') === null, 'plaintext is removed')
                 equal(bodyChildren.length, 2);
                 equal(bodyChildren[0].nodeName, 'FORM', 'first child element is a form');
                 equal(bodyChildren[1].nodeName, 'FORM', 'second child element is a form');
                 start();
             }, doc);
-            ok(doc.querySelector('plaintext') === null, 'plaintext removed')
+            ok(doc.querySelector('plaintext') === null, 'plaintext is removed')
         });
         $("#qunit-fixture").append(iframe);
     });
