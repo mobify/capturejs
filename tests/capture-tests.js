@@ -77,6 +77,18 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
 
+            var expectedPlaintext =
+                "    <link rel=stylesheet href=/path/to/stylesheet.css>" +
+                "</head>" +
+                "<body bar=baz>" +
+                "  <!-- comment with <head> -->" +
+                "  <p>Plaintext example page!</p>" +
+                "  <script src=/path/to/script.js><\/script>" +
+                "</body>" +
+                "</html>";
+
+            ok(compareHTMLStrings(doc.querySelector('plaintext').innerHTML, expectedPlaintext), "plaintext is added")
+
             Capture.init(function(capture) {
                 var capturedDoc = capture.capturedDoc;
 
@@ -97,6 +109,8 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
                 ok(compareHTMLStrings(html, expectedHtml), "Passed!");
                 start();
             }, doc);
+
+            ok(doc.querySelector('plaintext') === null, "plaintext is removed")
         });
         $("#qunit-fixture").append(iframe);
     });
@@ -490,6 +504,15 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         });
         var el = $iframe[0];
 
+        var expectedPlaintext =
+            '</head>' +
+            '<body bar="baz">' +
+            '  <!-- comment with <head> -->' +
+            '  <p>Plaintext example page!</p>' +
+            '  <script src="/path/to/script.js"><\/script>' +
+            '</body>' +
+            '</html>';
+
         var expectedHTML =
             '<!DOCTYPE HTML>' +
             '<html class="testclass">' +
@@ -521,9 +544,11 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
 
+            ok(compareHTMLStrings(doc.querySelector('plaintext').innerHTML, expectedPlaintext), 'plaintext added')
             Capture.init(function(capture) {
                 capture.restore('<script>parent.postMessage("done!", "*");<\/script>');
             }, doc);
+            ok(doc.querySelector('plaintext') === null, 'plaintext removed')
         });
         $("#qunit-fixture").append($iframe);
     });
@@ -540,6 +565,15 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         iframe.one('load', function() {
             var doc = this.contentDocument;
 
+            var expectedPlaintext =
+                '</head>' +
+                '<body>' +
+                '  <form><\/form>' +
+                '  <form><\/form>' +
+                '</body>' +
+                '</html>';
+
+            ok(compareHTMLStrings(doc.querySelector('plaintext').innerHTML, expectedPlaintext), "plaintext added")
             Capture.init(function(capture) {
                 var capturedDoc = capture.capturedDoc;
 
@@ -549,6 +583,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
                 equal(bodyChildren[1].nodeName, 'FORM', 'second child element is a form');
                 start();
             }, doc);
+            ok(doc.querySelector('plaintext') === null, 'plaintext removed')
         });
         $("#qunit-fixture").append(iframe);
     });
@@ -625,85 +660,4 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
         ok(!Capture.isIOS8OrGreater('lorem ipsum mobile browser 9.0'), 'Nonsense');
     });
-
-    asyncTest(
-      "createDocumentFragmentsStrings - head in comment tag: delete plaintext tag in source?????",
-      function() {
-        var expectedCapture = {
-          doctype: "<!DOCTYPE HTML>",
-          htmlOpenTag: '<html class="testclass">',
-          headOpenTag: '<head foo="bar">',
-          bodyOpenTag: '<body bar="baz">',
-          headContent:
-            '\n\n    \n    <link rel="stylesheet" href="/path/to/stylesheet.css">\n<!-- </head> end -->\n</head>\n',
-          bodyContent:
-            '\n    <!-- comment with <head> -->\n    <p>Plaintext example page!</p>\n    <script src="/path/to/script.js"></script>\n</body>\n</html>\n'
-        };
-
-        var iframe = $("<iframe>", { id: "plaintext-head-in-comment" });
-        iframe.attr("src", "/tests/fixtures/plaintext-head-in-comment.html");
-        iframe.one("load", function() {
-          var doc = this.contentDocument;
-
-          // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
-          var htmlEl = doc
-            .getElementsByTagName("html")[0]
-            .removeAttribute("webdriver");
-
-          debugger;
-          ok(doc.querySelector("plaintext") !== null, "plaintext is in document");
-
-          Capture.init(function(capture) {
-            ok(
-              compareHTMLStrings(
-                capture.bodyContent,
-                expectedCapture.bodyContent
-              ),
-              "bodyContent matches"
-            );
-            ok(
-              compareHTMLStrings(
-                capture.bodyOpenTag,
-                expectedCapture.bodyOpenTag
-              ),
-              "bodyOpenTag matches"
-            );
-            ok(
-              compareHTMLStrings(
-                capture.doctype,
-                expectedCapture.doctype),
-              "doctype matches"
-            );
-            ok(
-              compareHTMLStrings(
-                capture.headContent,
-                expectedCapture.headContent
-              ),
-              "headContent matches"
-            );
-            ok(
-              compareHTMLStrings(
-                capture.headOpenTag,
-                expectedCapture.headOpenTag
-              ),
-              "headOpenTag matches"
-            );
-            ok(
-              compareHTMLStrings(
-                capture.htmlOpenTag,
-                expectedCapture.htmlOpenTag
-              ),
-              "htmlOpenTag matches"
-            );
-          }, doc);
-          debugger
-          ok(
-            doc.querySelector("plaintext") === null,
-            "plaintext is removed from document"
-          );
-          start();
-        });
-        $("#qunit-fixture").append(iframe);
-      }
-    );
 });
