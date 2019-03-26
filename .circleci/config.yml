@@ -1,0 +1,48 @@
+
+version: 2
+references:
+  configure_node: &configure_node
+    run:
+      name: Configure node version
+      command: |
+        # Adds commands to the file that's sourced
+        # before every 'run', so that the node version
+        # configured in .nvmrc will be used.
+        set +e
+        touch $BASH_ENV
+        echo 'unset npm_config_prefix' >> $BASH_ENV
+        echo 'export NVM_DIR=/usr/local/nvm' >> $BASH_ENV
+        echo '. "$NVM_DIR/nvm.sh"'  >> $BASH_ENV
+        echo 'nvm use --delete-prefix --silent' >> $BASH_ENV
+        echo 'node -v' >> $BASH_ENV
+        echo 'export PATH="${PATH}:$(dirname $(nvm which | tail -1))"' >> $BASH_ENV
+jobs:
+  build:
+    docker:
+      - image: mobify/cci-docker-primary:latest
+    workDir: /home/ubuntu/capturejs
+    steps:
+      - type: checkout
+      - *configure_node
+      - type: shell
+        name: Pre-Dep
+        command: mkdir /home/ubuntu/artifacts
+      - type: cache-restore
+        key: capturejs-{{ .Revision }}
+      - type: shell
+        name: Install Dependencies
+        command: npm ci && $(npm bin)/bower install
+      - type: cache-save
+        key: capturejs-{{ .Revision }}
+        paths:
+          - /home/ubuntu/capturejs/node_modules
+          - /home/ubuntu/capturejs/bower_components
+      - type: shell
+        name: NPM Test
+        command: $(npm bin)/grunt test
+
+workflows:
+  version: 2
+  build_test:
+    jobs:
+      - build

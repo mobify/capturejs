@@ -2,6 +2,7 @@
   "name": "mobify-capturejs",
   "version": "1.0.6",
   "devDependencies": {
+    "bower": "^1.8.8",
     "browserify": "~3.46.1",
     "grunt": "~0.4.0",
     "grunt-aws-s3": "^0.14.0",
@@ -12,6 +13,5 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express": "~0.3.6",
     "grunt-saucelabs": "8.3.2"
-  },
-  "dependencies": {}
+  }
 }
