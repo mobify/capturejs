@@ -1,4 +1,3 @@
-
 version: 2
 references:
   configure_node: &configure_node
@@ -31,7 +30,7 @@ jobs:
         key: capturejs-{{ .Revision }}
       - type: shell
         name: Install Dependencies
-        command: npm ci && $(npm bin)/bower install
+        command: npm ci && $(npm bin)/bower install --allow-root
       - type: cache-save
         key: capturejs-{{ .Revision }}
         paths:
