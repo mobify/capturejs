@@ -1,5 +1,7 @@
-require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
-    QUnit.start();
+require(["qunit", "mobifyjs/utils", "capture"], function(QUnit, Utils, Capture) {
+    QUnit.begin( function( data ) {
+        window.beginData = data;
+    });
 
     module('Capturing');
 
@@ -625,5 +627,5 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
         ok(!Capture.isIOS8OrGreater('lorem ipsum mobile browser 9.0'), 'Nonsense');
     });
-
+    QUnit.start();
 });

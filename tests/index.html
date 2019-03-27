@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <title>capture.js tests</title>
   <link rel="stylesheet" href="/tests/resources/qunit-1.10.0.css">
-  <script src="/tests/resources/qunit-1.10.0.js"></script>
   <script src="/tests/resources/require.js"></script>
   <script src="/tests/resources/jquery-1.7.1.js"></script>
   <script src="/tests/utils/compare-html.js"></script>
@@ -52,49 +51,51 @@
   </div>
 
 <script>
-    // http://api.qunitjs.com/QUnit.config/
-    QUnit.config.autostart = false;
-    QUnit.config.testTimeout = 30 * 1000;
-
-    var removeNewlines = function(str) {
-        return str.replace(/(\r\n|\n|\r)/gm,'');
-    };
-
-    var log = [];
-    var testName;
-
-    QUnit.done(function (test_results) {
-      var tests = [];
-      for(var i = 0, len = log.length; i < len; i++) {
-        var details = log[i];
-        tests.push({
-          name: details.name,
-          result: details.result,
-          expected: details.expected,
-          actual: details.actual,
-          source: details.source
-        });
-      }
-      test_results.tests = tests;
-
-      window.global_test_results = test_results;
-    });
-    QUnit.testStart(function(testDetails){
-      QUnit.log(function(details){
-        if (!details.result) {
-          details.name = testDetails.name;
-          log.push(details);
-        }
-      });
-    });
-
     require.config({
         "baseUrl": "../src",
         "paths": {
-            "mobifyjs/utils": "../bower_components/mobifyjs-utils/utils"
+            "mobifyjs/utils": "../bower_components/mobifyjs-utils/utils",
+            "qunit": "../tests/resources/qunit.1.23.1"
         }
     });
-    
+</script>
+
+<script>
+    // http://api.qunitjs.com/QUnit.config/
+    // QUnit.config.autostart = false;
+    // QUnit.config.testTimeout = 30 * 1000;
+
+    // var removeNewlines = function(str) {
+    //     return str.replace(/(\r\n|\n|\r)/gm,'');
+    // };
+
+    // var log = [];
+    // var testName;
+
+    // QUnit.done(function (test_results) {
+    //   var tests = [];
+    //   for(var i = 0, len = log.length; i < len; i++) {
+    //     var details = log[i];
+    //     tests.push({
+    //       name: details.name,
+    //       result: details.result,
+    //       expected: details.expected,
+    //       actual: details.actual,
+    //       source: details.source
+    //     });
+    //   }
+    //   test_results.tests = tests;
+
+    //   window.global_test_results = test_results;
+    // });
+    // QUnit.testStart(function(testDetails){
+    //   QUnit.log(function(details){
+    //     if (!details.result) {
+    //       details.name = testDetails.name;
+    //       log.push(details);
+    //     }
+    //   });
+    // });
 </script>
   <script src="capture-tests.js"></script>
   <script src="patchAnchorLinks-tests.js"></script>
