@@ -59,6 +59,46 @@
         }
     });
 </script>
+
+<script>
+  require("qunit", function(QUnit) {
+    // http://api.qunitjs.com/QUnit.config/
+    QUnit.config.autostart = false;
+    QUnit.config.testTimeout = 30 * 1000;
+
+    var removeNewlines = function(str) {
+        return str.replace(/(\r\n|\n|\r)/gm,'');
+    };
+
+    var log = [];
+    var testName;
+
+    QUnit.done(function (test_results) {
+      var tests = [];
+      for(var i = 0, len = log.length; i < len; i++) {
+        var details = log[i];
+        tests.push({
+          name: details.name,
+          result: details.result,
+          expected: details.expected,
+          actual: details.actual,
+          source: details.source
+        });
+      }
+      test_results.tests = tests;
+
+      window.global_test_results = test_results;
+    });
+    QUnit.testStart(function(testDetails){
+      QUnit.log(function(details){
+        if (!details.result) {
+          details.name = testDetails.name;
+          log.push(details);
+        }
+      });
+    });
+  });
+</script>
   <script src="capture-tests.js"></script>
   <script src="patchAnchorLinks-tests.js"></script>
 </body>
