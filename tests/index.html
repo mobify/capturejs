@@ -61,7 +61,7 @@
 </script>
 
 <script>
-  require("qunit", function(QUnit) {
+  define("saucelabs-config", ["qunit"], function(QUnit) {
     // http://api.qunitjs.com/QUnit.config/
     QUnit.config.autostart = false;
     QUnit.config.testTimeout = 30 * 1000;

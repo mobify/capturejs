@@ -1,4 +1,4 @@
-require(['qunit', 'patchAnchorLinks'], function(QUnit, patchAnchorLinks) {
+require(['saucelabs-config', 'qunit', 'patchAnchorLinks'], function(_, QUnit, patchAnchorLinks) {
     module("Anchor");
     var skip = function() {
         // Test harness does not work on Android 4.0.x and less because

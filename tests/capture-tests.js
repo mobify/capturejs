@@ -1,4 +1,4 @@
-require(["qunit", "mobifyjs/utils", "capture"], function(QUnit, Utils, Capture) {
+require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, QUnit, Utils, Capture) {
     QUnit.begin( function( data ) {
         window.beginData = data;
     });
