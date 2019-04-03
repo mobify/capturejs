@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>capture.js tests</title>
-  <link rel="stylesheet" href="/tests/resources/qunit-1.10.0.css">
-  <script src="/tests/resources/qunit-1.10.0.js"></script>
+  <link rel="stylesheet" href="/tests/resources/qunit.1.23.1.css">
   <script src="/tests/resources/require.js"></script>
   <script src="/tests/resources/jquery-1.7.1.js"></script>
   <script src="/tests/utils/compare-html.js"></script>
@@ -52,6 +51,17 @@
   </div>
 
 <script>
+    require.config({
+        "baseUrl": "../src",
+        "paths": {
+            "mobifyjs/utils": "../bower_components/mobifyjs-utils/utils",
+            "qunit": "../tests/resources/qunit.1.23.1"
+        }
+    });
+</script>
+
+<script>
+  define("saucelabs-config", ["qunit"], function(QUnit) {
     // http://api.qunitjs.com/QUnit.config/
     QUnit.config.autostart = false;
     QUnit.config.testTimeout = 30 * 1000;
@@ -87,14 +97,7 @@
         }
       });
     });
-
-    require.config({
-        "baseUrl": "../src",
-        "paths": {
-            "mobifyjs/utils": "../bower_components/mobifyjs-utils/utils"
-        }
-    });
-    
+  });
 </script>
   <script src="capture-tests.js"></script>
   <script src="patchAnchorLinks-tests.js"></script>

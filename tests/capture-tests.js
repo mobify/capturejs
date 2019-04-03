@@ -1,5 +1,7 @@
-require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
-    QUnit.start();
+require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, QUnit, Utils, Capture) {
+    QUnit.begin( function( data ) {
+        window.beginData = data;
+    });
 
     module('Capturing');
 
@@ -565,7 +567,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         var el = $iframe[0];
 
         window.addEventListener("message", function onMessage(e) {
-            if (event.source != el.contentWindow) return;
+            if (e.source != el.contentWindow) return;
             window.removeEventListener("message", onMessage, false);
             equal(el.contentDocument.querySelectorAll("meta[name='apple-itunes-app']").length, 0, "Smart banner meta tag has been removed.");
             start();
@@ -586,7 +588,7 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
         var el = $iframe[0];
 
         window.addEventListener("message", function onMessage(e) {
-            if (event.source != el.contentWindow) return;
+            if (e.source != el.contentWindow) return;
             window.removeEventListener("message", onMessage, false);
             equal(el.contentDocument.querySelectorAll("meta[name='apple-itunes-app']").length, 1, "Smart banner meta tag is still in place.");
             start();
@@ -625,5 +627,5 @@ require(["mobifyjs/utils", "capture"], function(Utils, Capture) {
 
         ok(!Capture.isIOS8OrGreater('lorem ipsum mobile browser 9.0'), 'Nonsense');
     });
-
+    QUnit.start();
 });
