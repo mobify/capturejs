@@ -38,7 +38,7 @@ $(npm bin)/grunt serve
 open http://localhost:3000/tests/index.html
 ```
 
-To run the tests from the comamndline
+To run the tests from the commandline
 
 ```
 $(npm bin)/grunt test
@@ -50,7 +50,7 @@ export SAUCE_USERNAME=<saucelabs username>
 export SAUCE_ACCESS_KEY=<saucelabs access key>
 $(npm bin)/grunt saucelabs
 ```
-You can monitor test progress via the suacelabs dashbaord: 
+You can monitor test progress via the suacelabs dashbaord:
 [https://app.saucelabs.com/dashboard/tests](https://app.saucelabs.com/dashboard/tests)
 
 The test suite will likely take several minutes to run across the test matrix
@@ -59,7 +59,7 @@ defined in `Gruntfile.js`
 Then, do the following to ship the change:
 
 * Make your code changes
-* Ensure the tests still work in your browser, on the commandline, in 
+* Ensure the tests still work in your browser, on the commandline, in
   continuous integration and in Sauce Labs
 * Create a pull-request
 * Get your change reviewed and :+1:'ed
