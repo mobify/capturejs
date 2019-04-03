@@ -22,7 +22,7 @@ Then, run the following command to watch and build the capture.js file as you
 develop:
 
 ```bash
-grunt serve
+$(npm bin)/grunt serve
 ```
 
 Make sure you've got mobifyjs-utils installed!
@@ -30,7 +30,7 @@ Make sure you've got mobifyjs-utils installed!
 Then, do the following to ship the change:
 
 * Make your code changes and create a pull-request
-* Ensure the tests still work (`grunt test` and `grunt saucelabs`)
+* Ensure the tests still work (`$(npm bin)/grunt test` and `$(npm bin)/grunt saucelabs`)
 * Get your change reviewed and :+1:'ed
 
 ## Roadmap
@@ -40,4 +40,4 @@ Then, do the following to ship the change:
 
 ## Where to get help
 
-Talk to @jansepar
+Talk to Stella, Noah or John

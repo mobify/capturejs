@@ -56,92 +56,83 @@ module.exports = function(grunt) {
                     urls: [
                         'http://localhost:3001/tests/index.html'
                     ],
+                    testname: 'CaptureJS QUnit Tests',
                     concurrency: 16,
                     tunneled: true,
                     detailedError: true,
-                    browsers: [ //https://saucelabs.com/docs/platforms
-                        { // Only working version of IE compatible
+                    // Poll for status every 10 seconds for 10 minutes
+                    pollInterval: 10000,
+                    statusCheckAttempts: 60,
+                    // For available browsers and how to configure them see
+                    // https://saucelabs.com/docs/platforms and
+                    // https://wiki.saucelabs.com/display/DOCS/Platform+Configurator#/
+                    browsers: [
+                        { // IE 10 on Windows 8
                             browserName: 'internet explorer',
                             platform: 'Windows 2012',
                             version: '10'
-                        }
-                        // { // Only working version of IE compatible
-                        //     browserName: 'internet explorer',
-                        //     platform: 'Windows 8.1',
-                        //     version: '11'
-                        // },
-                        // { // Lowest known working version of FF
-                        //     browserName: 'opera',
-                        //     platform: 'Windows 2003',
-                        //     version: '11'
-                        // },
-                        // { // Highest known working version of Opera
-                        //     browserName: 'opera',
-                        //     platform: 'Windows 2008',
-                        //     version: '12'
-                        // },
-                        // { // Latest Chrome on Windows XP
-                        //     browserName: 'chrome',
-                        //     platform: 'Windows 2003'
-                        // },
-                        // { // Latest Chrome on Windows 7
-                        //     browserName: 'chrome',
-                        //     platform: 'Windows 2008'
-                        // },
-                        // { // Latest Chrome on Linux (unknown distro)
-                        //     browserName: 'chrome',
-                        //     platform: 'Linux'
-                        // },
-                        // { // Latest Chrome on Linux (unknown distro)
-                        //     browserName: 'chrome',
-                        //     platform: 'OS X 10.8'
-                        // },
-                        // { // Lowest known working version of FF
-                        //     browserName: 'firefox',
-                        //     version: '4.0'
-                        // },
-                        // { // Highest known working version of FF on Windows
-                        //     browserName: 'firefox',
-                        //     version: '18.0'
-                        // },
-                        // {
-                        //     browserName: 'ipad',
-                        //     platform: 'OS X 10.10',
-                        //     version: '9.0'
-                        // },
-                        // {
-                        //     browserName: 'ipad',
-                        //     platform: 'OS X 10.10',
-                        //     version: '8.4'
-                        // },
-                        // {
-                        //     browserName: 'iphone',
-                        //     platform: 'OS X 10.10',
-                        //     version: '9.0'
-                        // },
-                        // {
-                        //     browserName: 'iphone',
-                        //     platform: 'OS X 10.10',
-                        //     version: '8.4'
-                        // },
-                        // {
-                        //   // NOTE: iOS 6 is available, but it hangs on SauceLabs...
-                        //     browserName: 'ipad',
-                        //     platform: 'Mac 10.6',
-                        //     version: '5'
-                        // },
-                        // { // Highest iPhone on OSX (simulator)
-                        //   // NOTE: iOS 6 is available, but it hangs on SauceLabs...
-                        //     browserName: 'iphone',
-                        //     platform: 'Mac 10.6',
-                        //     version: '5'
-                        // },
-                        // { // Android 4.0 (simulator)
-                        //     browserName: 'android',
-                        //     platform: 'Linux',
-                        //     version: '4'
-                        // }
-                    ] // https://saucelabs.com/docs/browsers
+                        },
+                        { // IE 11 on Windows 8.1
+                            browserName: 'internet explorer',
+                            platform: 'Windows 8.1',
+                            version: '11'
+                        },
+                        { // Latest IE Edge on Windows 10
+                            browserName: 'MicrosoftEdge',
+                            platform: 'Windows 10'
+                        },
+                        { // Latest Chrome on Windows 10
+                            browserName: 'chrome',
+                            platform: 'Windows 10'
+                        },
+                        { // Latest Chrome on Linux (unknown distro)
+                            browserName: 'chrome',
+                            platform: 'Linux'
+                        },
+                        { // Latest Chrome on macOS 10.13
+                            browserName: 'chrome',
+                            platform: 'macOS 10.13'
+                        },
+                        { // Lowest known working version of FF
+                            platform: 'Windows 10',
+                            browserName: 'firefox',
+                            version: '4.0'
+                        },
+                        { // Highest known working version of FF on Windows
+                            platform: 'Windows 10',
+                            browserName: 'firefox',
+                        },
+                        {   // Newest iOS simulator as of 2019-04-02
+                            browserName: 'ipad',
+                            platform: 'macOS 10.13',
+                            version: '12.0'
+                        },
+                        {   // Oldest iOS simulator as of 2019-04-02
+                            browserName: 'ipad',
+                            platform: 'macOS 10.11',
+                            version: '9.3'
+                        },
+                        {   // Newest iOS simulator as of 2019-04-02
+                            browserName: 'iphone',
+                            platform: 'macOS 10.13',
+                            version: '12.0'
+                        },
+                        {   // Oldest iOS simulator as of 2019-04-02
+                            browserName: 'iphone',
+                            platform: 'macOS 10.11',
+                            version: '9.3'
+                        },
+                        { // Android 4.4 Android Browser (simulator)
+                            browserName: 'android',
+                            platform: 'Linux',
+                            version: '4.4'
+                        },
+                        { // Android 8.0 Chrome? (simulator)
+                            browserName: 'android',
+                            platform: 'Linux',
+                            version: '8.0'
+                        },
+                    ]
                 }
             }
         },
