@@ -13,7 +13,7 @@ go to www.mobifyjs.com for information on how to use capturing.
 
 ### Install the dependencies:
 
-Get NodeJS v10.15.1 with npm v6.4.1: https://nodejs.org/en/download/
+Get NodeJS v8.10 with npm v5.7: https://nodejs.org/en/download/
 
 ```bash
 npm install
