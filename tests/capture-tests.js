@@ -89,7 +89,7 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
                 "</body>" +
                 "</html>";
 
-            ok(compareHTMLStrings(doc.querySelector('plaintext').innerHTML, expectedPlaintext), "plaintext is added")
+            ok(compareHTMLStrings(doc.querySelector('plaintext').innerText, expectedPlaintext), "plaintext is added")
 
             Capture.init(function(capture) {
                 var capturedDoc = capture.capturedDoc;
@@ -547,7 +547,7 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
 
-            ok(compareHTMLStrings(doc.querySelector('plaintext').innerHTML, expectedPlaintext), 'plaintext added')
+            ok(compareHTMLStrings(doc.querySelector('plaintext').innerText, expectedPlaintext), 'plaintext added')
             Capture.init(function(capture) {
                 ok(doc.querySelector('plaintext') === null, "plaintext is removed")
                 capture.restore('<script>parent.postMessage("done!", "*");<\/script>');
@@ -577,7 +577,7 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
                 '</body>' +
                 '</html>';
 
-            ok(compareHTMLStrings(doc.querySelector('plaintext').innerHTML, expectedPlaintext), "plaintext added")
+            ok(compareHTMLStrings(doc.querySelector('plaintext').innerText, expectedPlaintext), "plaintext added")
             Capture.init(function(capture) {
                 var capturedDoc = capture.capturedDoc;
 
