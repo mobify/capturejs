@@ -89,7 +89,10 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
                 "</body>" +
                 "</html>";
 
-            ok(compareHTMLStrings(doc.querySelector('plaintext').innerText, expectedPlaintext), "plaintext is added")
+            var plaintextEl = doc.querySelector('plaintext')
+            // Firefox 4.0 does not support access to innerText
+            var plaintextText = plaintextEl.innerText || plaintextEl.innerHTML
+            ok(compareHTMLStrings(plaintextText, expectedPlaintext), "plaintext is added")
 
             Capture.init(function(capture) {
                 var capturedDoc = capture.capturedDoc;
@@ -547,7 +550,10 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
 
-            ok(compareHTMLStrings(doc.querySelector('plaintext').innerText, expectedPlaintext), 'plaintext added')
+            var plaintextEl = doc.querySelector('plaintext')
+            // Firefox 4.0 does not support access to innerText
+            var plaintextText = plaintextEl.innerText || plaintextEl.innerHTML
+            ok(compareHTMLStrings(plaintextText, expectedPlaintext), 'plaintext added')
             Capture.init(function(capture) {
                 ok(doc.querySelector('plaintext') === null, "plaintext is removed")
                 capture.restore('<script>parent.postMessage("done!", "*");<\/script>');
@@ -577,7 +583,10 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
                 '</body>' +
                 '</html>';
 
-            ok(compareHTMLStrings(doc.querySelector('plaintext').innerText, expectedPlaintext), "plaintext added")
+            var plaintextEl = doc.querySelector('plaintext')
+            // Firefox 4.0 does not support access to innerText
+            var plaintextText = plaintextEl.innerText || plaintextEl.innerHTML
+            ok(compareHTMLStrings(plaintextText, expectedPlaintext), "plaintext added")
             Capture.init(function(capture) {
                 var capturedDoc = capture.capturedDoc;
 

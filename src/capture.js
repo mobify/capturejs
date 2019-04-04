@@ -129,7 +129,9 @@ Capture.init = Capture.initCapture = function(callback, doc, prefix) {
         var capturedDOMFragments = capture.createDocumentFragments();
         Utils.extend(capture, capturedDOMFragments);
         var plaintextEl = capture.sourceDoc.querySelector('plaintext')
-        if (plaintextEl) plaintextEl.remove()
+        if (plaintextEl) {
+            plaintextEl.parentNode.removeChild(plaintextEl)
+        }
         callback(capture);
     };
 
