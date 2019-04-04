@@ -1,3 +1,13 @@
+1.0.7
+    - Upgrade dependencies (grunt-conbtrib-qunit and grunt-saucelabs).
+    - Make bower, browserify, and grunt-cli dependencies explicit.
+    - Update list of browsers to run saucelabs on.
+    - Remove plaintext from sourceDoc after captured doc elements have been
+      saved into the capturedDoc to prevent googlebot from picking up the
+      lingering plaintext as metadata.
+    - Add checks to tests to confirm that plaintext was added before
+      Capture.init and removed before the callback in Capture.init.
+    - Some README updates to match
 1.0.6
     - Fixed issue where <!-- --> comments containing '<head>' created false
       positives when looking for the <head> section in HTML
