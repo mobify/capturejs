@@ -6,7 +6,7 @@
       saved into the capturedDoc to prevent googlebot from picking up the
       lingering plaintext as metadata.
     - Add checks to tests to confirm that plaintext was added before
-      Capture.init and removed before the callback in Capture.init.
+      Capture.init and removed after the callback in Capture.init.
     - Some README updates to match
 1.0.6
     - Fixed issue where <!-- --> comments containing '<head>' created false
