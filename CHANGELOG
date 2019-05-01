@@ -7,7 +7,6 @@
       lingering plaintext as metadata.
     - Add checks to tests to confirm that plaintext was added before
       Capture.init and removed after the callback in Capture.init.
-    - Some README updates to match
 1.0.6
     - Fixed issue where <!-- --> comments containing '<head>' created false
       positives when looking for the <head> section in HTML
