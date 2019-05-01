@@ -1,6 +1,6 @@
 {
   "name": "mobify-capturejs",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "devDependencies": {
     "bower": "~1.8.8",
     "browserify": "~3.46.1",

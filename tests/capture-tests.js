@@ -79,26 +79,48 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
 
+            var expectedPlaintext =
+                "    <link rel=stylesheet href=/path/to/stylesheet.css>" +
+                "</head>" +
+                "<body bar=baz>" +
+                "  <!-- comment with <head> -->" +
+                "  <p>Plaintext example page!</p>" +
+                "  <script src=/path/to/script.js><\/script>" +
+                "</body>" +
+                "</html>";
+
+            var plaintextEl = doc.querySelector('plaintext')
+            // Firefox 4.0 does not support access to innerText
+            var plaintextText = plaintextEl.innerText || plaintextEl.innerHTML
+            ok(compareHTMLStrings(plaintextText, expectedPlaintext), "plaintext is added")
+
             Capture.init(function(capture) {
-                var capturedDoc = capture.capturedDoc;
+                // wait for a turn of the event loop to see the removed 
+                // <plaintext> element
+                setTimeout(function() {
+                    var capturedDoc = capture.capturedDoc;
 
-                var expectedHtml =
-                    "<!DOCTYPE HTML>" +
-                    "<html class=testclass>" +
-                    "<head foo=bar>" +
-                    "    <link rel=stylesheet href=/path/to/stylesheet.css>" +
-                    "</head>" +
-                    "<body bar=baz>" +
-                    "  <!-- comment with <head> -->" +
-                    "  <p>Plaintext example page!</p>" +
-                    "  <script src=/path/to/script.js><\/script>" +
-                    "</body>" +
-                    "</html>";
+                    var expectedHtml =
+                        "<!DOCTYPE HTML>" +
+                        "<html class=testclass>" +
+                        "<head foo=bar>" +
+                        "    <link rel=stylesheet href=/path/to/stylesheet.css>" +
+                        "</head>" +
+                        "<body bar=baz>" +
+                        "  <!-- comment with <head> -->" +
+                        "  <p>Plaintext example page!</p>" +
+                        "  <script src=/path/to/script.js><\/script>" +
+                        "</body>" +
+                        "</html>";
 
-                var html = capture.enabledHTMLString(capturedDoc);
-                ok(compareHTMLStrings(html, expectedHtml), "Passed!");
-                start();
+                    var html = capture.enabledHTMLString(capturedDoc);
+                    ok(doc.querySelector('plaintext') === null, "plaintext is removed")
+                    ok(compareHTMLStrings(html, expectedHtml), "Passed!");
+                    start();
+                }, 0);
             }, doc);
+
+            ok(doc.querySelector('plaintext') === null, "plaintext is removed")
         });
         $("#qunit-fixture").append(iframe);
     });
@@ -492,6 +514,15 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
         });
         var el = $iframe[0];
 
+        var expectedPlaintext =
+            '</head>' +
+            '<body bar="baz">' +
+            '  <!-- comment with <head> -->' +
+            '  <p>Plaintext example page!</p>' +
+            '  <script src="/path/to/script.js"><\/script>' +
+            '</body>' +
+            '</html>';
+
         var expectedHTML =
             '<!DOCTYPE HTML>' +
             '<html class="testclass">' +
@@ -523,9 +554,19 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
             // We remove the webdriver attribute set when running tests on selenium (typically done through SauceLabs)
             var htmlEl = doc.getElementsByTagName("html")[0].removeAttribute("webdriver")
 
+            var plaintextEl = doc.querySelector('plaintext')
+            // Firefox 4.0 does not support access to innerText
+            var plaintextText = plaintextEl.innerText || plaintextEl.innerHTML
+            ok(compareHTMLStrings(plaintextText, expectedPlaintext), 'plaintext added')
             Capture.init(function(capture) {
-                capture.restore('<script>parent.postMessage("done!", "*");<\/script>');
+                // wait for a turn of the event loop to see the removed 
+                // <plaintext> element
+                setTimeout(function() {
+                    ok(doc.querySelector('plaintext') === null, "plaintext is removed")
+                    capture.restore('<script>parent.postMessage("done!", "*");<\/script>');
+                }, 0);
             }, doc);
+            ok(doc.querySelector('plaintext') === null, 'plaintext is removed')
         });
         $("#qunit-fixture").append($iframe);
     });
@@ -542,15 +583,33 @@ require(["saucelabs-config", "qunit", "mobifyjs/utils", "capture"], function(_, 
         iframe.one('load', function() {
             var doc = this.contentDocument;
 
-            Capture.init(function(capture) {
-                var capturedDoc = capture.capturedDoc;
+            var expectedPlaintext =
+                '</head>' +
+                '<body>' +
+                '  <form><\/form>' +
+                '  <form><\/form>' +
+                '</body>' +
+                '</html>';
 
-                var bodyChildren = capturedDoc.body.children;
-                equal(bodyChildren.length, 2);
-                equal(bodyChildren[0].nodeName, 'FORM', 'first child element is a form');
-                equal(bodyChildren[1].nodeName, 'FORM', 'second child element is a form');
-                start();
+            var plaintextEl = doc.querySelector('plaintext')
+            // Firefox 4.0 does not support access to innerText
+            var plaintextText = plaintextEl.innerText || plaintextEl.innerHTML
+            ok(compareHTMLStrings(plaintextText, expectedPlaintext), "plaintext added")
+            Capture.init(function(capture) {
+                // wait for a turn of the event loop to see the removed 
+                // <plaintext> element
+                setTimeout(function() {
+                    var capturedDoc = capture.capturedDoc;
+
+                    var bodyChildren = capturedDoc.body.children;
+                    ok(doc.querySelector('plaintext') === null, 'plaintext is removed')
+                    equal(bodyChildren.length, 2);
+                    equal(bodyChildren[0].nodeName, 'FORM', 'first child element is a form');
+                    equal(bodyChildren[1].nodeName, 'FORM', 'second child element is a form');
+                    start();
+                }, 0);
             }, doc);
+            ok(doc.querySelector('plaintext') === null, 'plaintext is removed')
         });
         $("#qunit-fixture").append(iframe);
     });

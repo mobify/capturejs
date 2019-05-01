@@ -128,7 +128,16 @@ Capture.init = Capture.initCapture = function(callback, doc, prefix) {
         Utils.extend(capture, capturedStringFragments);
         var capturedDOMFragments = capture.createDocumentFragments();
         Utils.extend(capture, capturedDOMFragments);
-        callback(capture);
+        try {
+            callback(capture);
+        } finally {
+            // Remove plaintext element after Capture.initCapture() callback
+            // has been called, and be robust in case of exceptions
+            var plaintextEl = capture.sourceDoc.querySelector('plaintext')
+            if (plaintextEl) {
+                plaintextEl.parentNode.removeChild(plaintextEl)
+            }
+        }
     };
 
     if (Utils.domIsReady(doc)) {
